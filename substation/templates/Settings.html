@@ -1,0 +1,142 @@
+{% extends 'Base.html' %}
+{% block body %}
+
+<style>
+    .form-section {
+        margin-bottom: 20px;
+    }
+
+    /* Make the form scrollable */
+    #scrollableForm {
+        max-height: 400px; /* Set the maximum height for the scrollable area */
+        overflow-y: auto;  /* Enable vertical scrolling */
+        border: 1px solid #ccc; /* Optional: Add a border for visual separation */
+        padding: 10px; /* Optional: Add some padding inside the scrollable area */
+        margin-bottom: 20px; /* Optional: Add some margin below the scrollable area */
+        border-radius: 5px;
+    }
+</style>
+
+<div id="sub_div">
+    <h1>Electrical Setup Form</h1>
+    <!-- Scrollable Form Section -->
+    <div id="scrollableForm">
+        <form id="dynamicForm" action="/Button_event/" method="post">
+            {% csrf_token %}
+            
+            <!-- Number of Incoming Lines -->
+            <div class="form-section">
+                <label for="incomingLines">Number of Incoming Lines:</label>
+                <input type="number" id="incomingLines" name="incomingLines" min="0" required>
+                <button type="button" onclick="generateFields('incomingLines', 'incomingLinesSection', 'Incoming Line')">Add Incoming Lines</button>
+            </div>
+            <div id="incomingLinesSection"></div>
+
+            <!-- Number of Transformers -->
+            <div class="form-section">
+                <label for="transformers">Number of Transformers:</label>
+                <input type="number" id="transformers" name="transformers" min="0" required>
+                <button type="button" onclick="generateTransformerFields()">Add Transformers</button>
+            </div>
+            <div id="transformersSection"></div>
+
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function generateFields(countId, sectionId, labelBase) {
+        const count = document.getElementById(countId).value;
+        const section = document.getElementById(sectionId);
+
+        // Clear any existing fields
+        section.innerHTML = '';
+
+        // Generate new fields based on the number provided
+        for (let i = 1; i <= count; i++) {
+            const label = document.createElement('label');
+            label.innerText = `${labelBase} ${i} Title: `;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `${labelBase.toLowerCase().replace(' ', '_')}_title_${i}`;
+
+            const br = document.createElement('br');
+
+            section.appendChild(label);
+            section.appendChild(input);
+            section.appendChild(br);
+        }
+    }
+
+    function generateTransformerFields() {
+        const transformersCount = document.getElementById('transformers').value;
+        const section = document.getElementById('transformersSection');
+
+        // Clear any existing fields
+        section.innerHTML = '';
+
+        // Generate new fields for each transformer
+        for (let i = 1; i <= transformersCount; i++) {
+            const div = document.createElement('div');
+            div.classList.add('form-section');
+
+            const label = document.createElement('label');
+            label.innerText = `Transformer ${i} Outgoing Feeders: `;
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = `transformer_${i}_outgoingFeeders`;
+            input.min = '0';
+            input.required = true;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.innerText = 'Add Outgoing Feeders';
+            button.onclick = function() {
+                generateOutgoingFeederFields(i, input.value);
+            };
+
+            div.appendChild(label);
+            div.appendChild(input);
+            div.appendChild(button);
+            div.appendChild(document.createElement('br'));
+
+            const feedersSection = document.createElement('div');
+            feedersSection.id = `transformer_${i}_outgoingFeedersSection`;
+
+            div.appendChild(feedersSection);
+            section.appendChild(div);
+        }
+    }
+
+    function generateOutgoingFeederFields(transformerId, count) {
+        const section = document.getElementById(`transformer_${transformerId}_outgoingFeedersSection`);
+
+        // Clear any existing fields
+        section.innerHTML = '';
+
+        // Generate new fields based on the number provided
+        for (let i = 1; i <= count; i++) {
+            const label = document.createElement('label');
+            label.innerText = `Transformer ${transformerId} - Outgoing Feeder ${i} Title: `;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = `transformer_${transformerId}_outgoingFeeder_${i}_title`;
+
+            const br = document.createElement('br');
+
+            section.appendChild(label);
+            section.appendChild(input);
+            section.appendChild(br);
+        }
+    }
+</script>
+
+{% endblock body %}

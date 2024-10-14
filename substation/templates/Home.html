@@ -1,0 +1,245 @@
+{% extends 'Base.html' %}
+{% block body %}
+
+<head>
+	<style>
+        
+        /*svg {
+            width: 100%;
+            height: 100%;
+        }*/
+       
+        .custom-path {
+          fill: none;
+          stroke: orange;
+          stroke-width: 0.5;
+        }
+        .alert_table{
+            border: 0px solid;
+            padding: 0px;
+            margin: 0px;
+            background-color: #e3d9bf;
+        }
+        .alert_data{
+            color: #111;
+        }
+
+        .axis {
+            font-family: sans-serif;
+            fill: #d35400;
+            font-size: 12px;
+        }
+
+        .line {
+            fill: none;
+            stroke: #f1c40f;
+            stroke-width: 0.5px;
+        }
+
+        .smoothline {
+            fill: none;
+            stroke-width: 0.5px;
+        }
+
+        .area {
+            fill: none;
+            opacity: 0.5;
+        }
+
+        .circle {
+            stroke: #e74c3c;
+            stroke-width: 0.5px;
+            fill: #FFF;
+        }
+
+        .grid {
+            stroke: #DDD;
+            stroke-width: 0.5px;
+            fill: none;
+        }
+
+
+    </style>
+</head>
+	<!-- <div style="border:0px solid orange; ">
+        <h2 class="" style="margin: 5px; background-color:var(--bg-head-nav-color); color:#eee">SUB STATION - APATAPA</h2>
+    </div>
+    <div style="border:0px solid orange; ">
+    </div> -->
+<div id="sub_div">
+       
+    <svg id="mySvg" width="1600" height="1000" style="border: 0px dashed; margin-top:5px; margin-left: 5px;" ></svg>
+
+    <!-- style="border: 2px dashed; margin-top:0%; margin-left: 2%;" -->
+
+    <script type="text/javascript" src="/static/js/RouteTrips.js"></script>
+    <script type="text/javascript" src="/static/js/d3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+     <script>
+        // Embed Python data in a JavaScript object
+        var pythonData = {
+            SLD_data: {{SLD_1|safe}},
+            SLD_middledata: {{SLD_2|safe}}
+        };
+    </script>
+
+
+</div>
+
+<!-- <script>
+        let scale = 0.564474; // Initial scale value
+        let translateX = 1.17576; // Initial translateX value
+        let translateY = 21.8459; // Initial translateY value
+        let isDragging = false;
+        let startX, startY;
+
+        const svgElement = document.getElementById('mySvg');
+        const svgContainer = document.getElementById('sub_div');
+        const centerButton = document.getElementById('center-button');
+
+        // Apply initial transform
+        updateTransform();
+
+        svgContainer.addEventListener('wheel', function(event) {
+            event.preventDefault();
+            const zoomFactor = 1.1;
+            const rect = svgElement.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left;
+            const offsetY = event.clientY - rect.top;
+            if (event.deltaY < 0) {
+                zoomIn(offsetX, offsetY, zoomFactor);
+            } else {
+                zoomOut(offsetX, offsetY, zoomFactor);
+            }
+        });
+
+        svgContainer.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            startX = event.clientX - translateX;
+            startY = event.clientY - translateY;
+        });
+
+        svgContainer.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                translateX = event.clientX - startX;
+                translateY = event.clientY - startY;
+                updateTransform();
+            }
+        });
+
+        svgContainer.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        svgContainer.addEventListener('mouseleave', function() {
+            isDragging = false;
+        });
+
+        centerButton.addEventListener('click', centerSvg);
+
+        function zoomIn(offsetX, offsetY, factor) {
+            scale *= factor;
+            translateX -= offsetX * (factor - 1);
+            translateY -= offsetY * (factor - 1);
+            updateTransform();
+        }
+
+        function zoomOut(offsetX, offsetY, factor) {
+            scale /= factor;
+            translateX += offsetX * (1 - 1 / factor);
+            translateY += offsetY * (1 - 1 / factor);
+            updateTransform();
+        }
+
+        function updateTransform() {
+            svgElement.style.transformOrigin = '0 0';
+            svgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function centerSvg() {
+            const containerRect = svgContainer.getBoundingClientRect();
+            const svgRect = svgElement.getBoundingClientRect();
+            translateX = (containerRect.width - svgRect.width * scale) / 2;
+            translateY = (containerRect.height - svgRect.height * scale) / 2;
+            updateTransform();
+        }
+    </script> -->
+<script>
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let isDragging = false;
+        let startX, startY;
+
+        const svgElement = document.getElementById('mySvg');
+        const svgContainer = document.getElementById('sub_div');
+        const centerButton = document.getElementById('center-button');
+
+        svgContainer.addEventListener('wheel', function(event) {
+            event.preventDefault();
+            const zoomFactor = 1.1;
+            const rect = svgElement.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left;
+            const offsetY = event.clientY - rect.top;
+            if (event.deltaY < 0) {
+                zoomIn(offsetX, offsetY, zoomFactor);
+            } else {
+                zoomOut(offsetX, offsetY, zoomFactor);
+            }
+        });
+
+        svgContainer.addEventListener('mousedown', function(event) {
+            isDragging = true;
+            startX = event.clientX - translateX;
+            startY = event.clientY - translateY;
+        });
+
+        svgContainer.addEventListener('mousemove', function(event) {
+            if (isDragging) {
+                translateX = event.clientX - startX;
+                translateY = event.clientY - startY;
+                updateTransform();
+            }
+        });
+
+        svgContainer.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        svgContainer.addEventListener('mouseleave', function() {
+            isDragging = false;
+        });
+
+        centerButton.addEventListener('click', centerSvg);
+
+        function zoomIn(offsetX, offsetY, factor) {
+            scale *= factor;
+            translateX -= offsetX * (factor - 1);
+            translateY -= offsetY * (factor - 1);
+            updateTransform();
+        }
+
+        function zoomOut(offsetX, offsetY, factor) {
+            scale /= factor;
+            translateX += offsetX * (1 - 1 / factor);
+            translateY += offsetY * (1 - 1 / factor);
+            updateTransform();
+        }
+
+        function updateTransform() {
+            svgElement.style.transformOrigin = '0 0';
+            svgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function centerSvg() {
+            const containerRect = svgContainer.getBoundingClientRect();
+            const svgRect = svgElement.getBoundingClientRect();
+            translateX = (containerRect.width - svgRect.width) / 2;
+            translateY = (containerRect.height - svgRect.height) / 2;
+            updateTransform();
+        }
+    </script>
+
+
+
+{% endblock body %}

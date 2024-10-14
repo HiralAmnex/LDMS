@@ -1,0 +1,5 @@
+- SLD Format & information block in it
+- SLD should Editable?
+- Standard Data storing duration.
+- Graph length specification(1Day/1week/1month)
+- Types of Reports with date specification (1day/week/month/year)

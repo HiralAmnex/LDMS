@@ -1,0 +1,182 @@
+{% extends 'Base.html' %}
+{% block body %}
+
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/Bootstrap_css.css" crossorigin="anonymous"> -->
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Feeders</title>
+	<style>
+		
+		.card {
+			width: 300px;
+			padding: 20px;
+			background-color: white;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+			margin-right: 20px; /* Added margin between cards */
+			float: left;
+		}
+		.card_2 {
+			width: 220px;
+			padding: 20px;
+			background-color: white;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+			margin-right: 20px; /* Added margin between cards */
+			float: left;
+			text-align: center;
+			background-color: #ffa31a;
+			color: #f2f2f2;
+		}
+		.card_3 {
+			width: 220px;
+			padding: 20px;
+			background-color: white;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+			margin-right: 20px; /* Added margin between cards */
+			float: left;
+			text-align: center;
+			background-color: #ff5c33;
+			color: #f2f2f2;
+		}
+		.progress-bar-container {
+			margin-bottom: 15px;
+			display: flex;
+			align-items: center;
+		}
+		.progress-bar {
+			width: 100%;
+			height: 20px;
+			background-color: #e0e0e0;
+			border-radius: 10px;
+			overflow: hidden;
+			position: relative;
+		}
+		.progress-bar-inner {
+			height: 100%;
+			width: 0;
+			background-color: #4caf50;
+			transition: width 0.5s;
+			border-radius: 10px;
+		}
+		.progress-label {
+			margin-left: 10px;
+			font-size: 14px;
+			line-height: 20px;
+		}
+	</style>
+
+
+<body>
+	<div id="sub_div">
+		
+	<h1 class="pg_title">Feeders</h1>
+	<div class="card">
+		<p>Line Voltage (KV)</p>
+		<hr>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress1"></div>
+			</div>
+			<div class="progress-label" id="label1">0%</div>
+		</div>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress2"></div>
+			</div>
+			<div class="progress-label" id="label2">0%</div>
+		</div>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress3"></div>
+			</div>
+			<div class="progress-label" id="label3">0%</div>
+		</div>
+	</div>
+
+	<!-- Second card -->
+	<div class="card">
+		<p>Line Current (A)</p>
+		<hr>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress4"></div>
+			</div>
+			<div class="progress-label" id="label4">0%</div>
+		</div>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress5"></div>
+			</div>
+			<div class="progress-label" id="label5">0%</div>
+		</div>
+		<div class="progress-bar-container">
+			<div class="progress-bar">
+				<div class="progress-bar-inner" id="progress6"></div>
+			</div>
+			<div class="progress-label" id="label6">0%</div>
+		</div>
+	</div>
+
+	<div style="" class="card_2">
+		<h5>Power Factor</h5>
+		<h3>-0.97(Lag)</h3>
+	</div>
+
+	<div class="card_3">
+		<h5>Power Factor</h5>
+		<h3>-0.97(Lag)</h3>
+	</div>
+
+	<div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+		<p style="float: left; padding-left: 5px;">Load Pattern for feeder : 11KV IN</p>
+		<a href="/" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+	</div>
+
+	<div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+		<p style="float: left; padding-left: 5px;">Line Current Pattern for Service : 11KV IN</p>
+		<a href="/" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+	</div>
+
+	<div style="width: 100%; border:0px solid; float:left; margin-top: 25px">
+		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; ">
+			<p style="float: left; padding-left: 5px;">Electricity Terrif</p>
+			<a href="/RTU_Status" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+		</div>
+		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+			<p style="float: left; padding-left: 5px;">Consuption (Last 3 Months)</p>
+			<a href="/Reports" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+		</div>
+		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+			<p style="float: left; padding-left: 5px;">Detail of Energy Comsuption</p>
+			<a href="/RTU_Status" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+		</div>
+	</div>
+
+
+	<script>
+		function updateProgressBar(id, labelId, value) {
+			var progressBar = document.getElementById(id);
+			var label = document.getElementById(labelId);
+			progressBar.style.width = value + '%';
+			label.innerHTML = value + '%';
+		}
+
+		document.addEventListener("DOMContentLoaded", function() {
+			// Simulate progress for demo purposes
+			var progressValues = [25, 60, 85];
+			for (let i = 0; i < progressValues.length; i++) {
+				setTimeout(() => {
+					updateProgressBar('progress' + (i + 1), 'label' + (i + 1), progressValues[i]);
+					updateProgressBar('progress' + (i + 4), 'label' + (i + 4), progressValues[i]); // Update for second card
+				}, 500);
+			}
+		});
+	</script>
+	</div>
+
+</body>
+
+{% endblock body %}

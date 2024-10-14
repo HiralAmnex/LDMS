@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    :root {
+    --stanard-nav-height: 7%;
+    --bg-side-nav-color:  #34495e  ;
+    --bg-head-nav-color:  #34495e  ;
+    --bg-body-color:  #ecf0f1  ;
+    /*  --font-size: 16px;*/
+    /*  --padding: 10px;*/
+    }
+    body {
+    font-family: "Lato", sans-serif;
+    background-color: var(--bg-body-color);
+    }
+    .pg_title{
+    color: #000;
+    border: 0px dashed;
+    }
+    .sidenav {
+    height: 100%;
+    width: 12%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-side-nav-color);
+    /*  background-image: linear-gradient(to right, #418042 , #418042);*/
+    /*background-image: linear-gradient(to right, #8c1aff , #d9b3ff);*/
+    overflow-x: hidden;
+    overflow-Y: hidden;
+    /*  transition: 0.5s;*/
+    padding-top: 0px;
+    margin: 0px;
+    border: 1px solid;
+    /*    border-radius: 10px;*/
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    }
+    /* Style the sidenav links and the dropdown button */
+    .sidenav a, .dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    color: #fff;
+    display: block;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #fff;
+    border-radius: 15px;
+    margin-left: 10px;
+    margin-top: 5px;
+    }
+    .sidenav a:hover {
+    color: #111;
+    background-color: var(--bg-body-color);
+    }
+    .sidenav button:hover {
+    color: #111;
+    background-color: #f2f2f2;
+    }
+    .sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    }
+    .nav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    border:1px solid #111;
+    border-radius: 10px;
+    margin: 0px;
+    width:87%;
+    margin-left:12.5%;
+    height: var(--stanard-nav-height);
+    background-color: var(--bg-side-nav-color);
+    }
+    #main {
+    padding: 0px;
+    width: 88%;
+    position: fixed;
+    top: var(--stanard-nav-height);
+    left: 0;
+    margin-left: 12%;
+    border: 0px solid;
+    }
+    .active {
+    background-color: #f2f2f2;
+    color: #111;
+    }
+    .dropdown-container {
+    display: none;
+    background-color: #262626;
+    padding-left: 8px;
+    }
+    .fa-caret-down {
+    float: right;
+    padding-right: 8px;
+    }
+    @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+    }
+    
+    #sub_div{
+    width: 97.9%;
+    height: auto;
+    margin: 10px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-y: auto;
+    position: absolute;
+    padding: 5px;
+    }
+
+
+    .Nav_icons{
+      border: 0px solid #fff;
+      width: 11%;
+      position: absolute;
+      right: 0;
+      margin-right: 1%;
+    }
+
+    .nav_font{margin-right: 1%; padding: 5px 10px 5px 10px; border-radius:5px; border:1px solid #111;color: #111; font-size: 14px;}
+    .nav_font:hover{background-color: #ccc}
+    
+    .nav_links{float: right; margin-right: 1%; padding: 5px 10px 5px 10px; border-radius:5px; color:#111; background-color: #f2f2f2; text-decoration: none; font-size: 14px; }
+    .nav_links:hover{background-color: #ccc}
+    
+    .nav_p{color: #fff;}
+    
+    .alert-container {
+    position: fixed;
+    top: 8.5%;
+    right: 1%;
+    z-index: 1000;
+    }
+    .alert {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.5s, opacity 0.5s;
+    transform: translateX(100%);
+    opacity: 0;
+    }
+    .alert.show {
+    transform: translateX(0);
+    opacity: 1;
+    }
+    .alert.hide {
+    transform: translateX(100%);
+    opacity: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <!-- side nav bar -->
+    <div class="main_div">
+      
+      
+      <div class="sidenav">
+        <div style="border:0px solid #111; width:99%; height: var(--stanard-nav-height); background-color: var(--bg-side-nav-color);">
+          <img src="/static/img/Amnex_Logo.png" style="width: 87%; height: 88%; padding: 5px;" >
+          <!-- Maha Vitran Logo -->
+        </div>
+        <div style="margin-top: 15%;">
+          <a href="/Home">Home</a>
+          
+          <a href="/Feeders">Feeders</a>
+          <a href="/RTU_Status">Trends</a>
+          <a href="/Reports">Reports</a>
+          <a href="/Repots_Metering">Metering Report</a>
+          <a href="/Reports_SoE">SoE Report</a>
+          <a href="/Events">Events</a>
+          <a href="/Settings">Settings</a>
+          <!-- <a href="/Alarms">Alarms</a> -->
+        </div>
+        <div style="border:0px solid #111; width:99%; align-items: center; height: var(--stanard-nav-height); position: absolute; bottom: 0; left: 0; background-color: var(--bg-side-nav-color);">
+          <img src="/static/img/Amnex_Logo.png" style="width: 87%; height: 88%; padding: 5px;" >
+          <!-- Amnex Logo -->
+          
+        </div>
+      </div>
+      <!-- side nav bar -->
+      <!-- nav bar -->
+      <div style="" class="nav">
+        <div style="position: absolute; display: flex; align-items:center; height:100%; width: 100%; border:0px dashed;">
+          <!-- <h3>{{Title}}</h3> -->
+
+          <!-- <p style="" class="">Welcome, User {{Title}}</p> -->
+          <div style="margin-left: 1%;">
+            <h2 style="color: white;">{{Title}}</h2>
+          </div>
+          <div style="border:0px solid; position: absolute; right: 14%;">
+            <p style="" class="nav_p">Welcome, {{User}}</p>
+          </div>
+          <div class="Nav_icons">
+            <button style="" class="nav_font">Alerts</button>
+            <a href="/" style="" class="nav_links">Logout</a>
+          </div>
+        </div>
+      </div>
+      <!-- nav bar -->
+      <div id="main">
+        <!-- ------------------- alert script ------------------- -->
+        <!-- <div id="alert_box_1">This is an alert message 1!</div> -->
+        <!-- <div id="alert_box_2">This is an alert message 2!</div> -->
+        <!-- <div id="alert-container"></div> -->
+        <script>
+        $(document).ready(function() {
+        setInterval(function() {
+        $("#refresh").load(window.location.href + " #refresh");
+        }, 2000);
+        });
+        </script>
+        
+        <!-- ------------------- alert script ------------------- -->
+        <!-- <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; h</span> -->
+        
+        {% block body %}
+        {% endblock body %}
+      </div>
+    </div>
+    <script>
+    /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+    var dropdown = document.getElementsByClassName("dropdown-btn");
+    var i;
+    for (i = 0; i < dropdown.length; i++) {
+    dropdown[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var dropdownContent = this.nextElementSibling;
+    if (dropdownContent.style.display === "block") {
+    dropdownContent.style.display = "none";
+    } else {
+    dropdownContent.style.display = "block";
+    }
+    });
+    }
+    </script>
+    <div class="alert-container" id="alert-container"></div>
+      <script>
+      function showSlidingAlerts(numAlerts) {
+      const alertContainer = document.getElementById('alert-container');
+      let alertCount = 0;
+      let msg = 'hellow';
+      const interval = setInterval(() => {
+      if (alertCount < numAlerts) {
+      const alert = document.createElement('div');
+      alert.className = 'alert';
+      alert.textContent = `This is alert Message ${msg}`;
+      alertContainer.appendChild(alert);
+      // Show the alert with a slight delay to allow CSS transitions
+      setTimeout(() => {
+      alert.classList.add('show');
+      }, 10);
+      // Hide and remove the alert after 5 seconds
+      setTimeout(() => {
+      alert.classList.remove('show');
+      alert.classList.add('hide');
+      setTimeout(() => {
+      alertContainer.removeChild(alert);
+      }, 500); // Wait for the hide transition to complete
+      }, 3000);
+      alertCount++;
+      } else {
+      clearInterval(interval);
+      }
+      }, 1000); // Show a new alert every second
+      }
+      // Example: Show a variable number of alerts (e.g., 5 alerts)
+      showSlidingAlerts(1);
+      </script>
+    
+  </body>
+</html>

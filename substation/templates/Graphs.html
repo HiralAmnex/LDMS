@@ -1,0 +1,28 @@
+{% extends 'Base.html' %}
+{% block body %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+
+<h1 class="pg_title">Graphs</h1>
+
+<!-- <div style="border:1px solid; height: 100px;">
+	
+</div> -->
+<div id="sub_div">
+
+<div style="border: 0px dashed;">
+	<div style="border: 0px dashed; max-width: auto; float: left; margin-left: 5px;">
+		<canvas id="myChart_1" style="width:100%;max-width:500px; height: 300px; border: 1px solid;"></canvas>
+		<script type="text/javascript" src="/static/js/graph_js/g_1.js"></script>
+	</div>
+
+	<div  style="border: 0px dashed; max-width: auto; float: left; margin-left: 5px;">
+		<canvas id="myChart_2" style="width:100%;max-width:500px; height: 300px; border: 1px solid;"></canvas>
+		<script type="text/javascript" src="/static/js/graph_js/g_2.js"></script>
+	</div>	
+</div>
+
+</div>
+
+{% endblock body %}

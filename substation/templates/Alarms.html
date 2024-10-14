@@ -1,0 +1,159 @@
+{% extends 'Base.html' %}
+{% block body %}
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
+<style>
+	body {
+    font-family: Arial, sans-serif;
+	}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+</style>
+<body>
+
+<h1 class="pg_title">Alarms</h1>
+
+    <h2>Modal Example</h2>
+    <button id="openModalBtn">Generate Alert</button>
+    <button id="closeModalBtn" style="display: none;">Close Alert</button>
+
+    <!-- <div id="Alert_Modal_1" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Alert Header</h2>
+            <p>This is a simple Alert.</p>
+        </div>
+    </div> -->
+
+    <div id="Alert_Modal_2" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Alert Header</h2>
+            <p>This is a simple Alert. 2</p>
+        </div>
+    </div>
+
+</body>
+
+<!-- <script type="text/javascript">
+	
+	document.addEventListener('DOMContentLoaded', (event) => {
+    const modal = document.getElementById('Alert_Modal_1');
+    const openBtn = document.getElementById('openModalBtn');
+    const closeBtn = document.getElementById('closeModalBtn');
+    const span_1 = document.getElementsByClassName('close')[0];
+
+    let modalStatus = 0;
+
+    function updateModalDisplay() {
+        if (modalStatus === 1) {
+            modal.style.display = 'block';
+        } else {
+            modal.style.display = 'none';
+        }
+    }
+
+    openBtn.onclick = function() {
+        modalStatus = 1;
+        updateModalDisplay();
+    }
+
+    closeBtn.onclick = function() {
+        modalStatus = 0;
+        updateModalDisplay();
+    }
+
+    span_1.onclick = function() {
+        modalStatus = 0;
+        updateModalDisplay();
+    }
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modalStatus = 0;
+            updateModalDisplay();
+        }
+    }
+});
+
+</script> -->
+
+<script type="text/javascript">
+	
+	document.addEventListener('DOMContentLoaded', (event) => {
+    const modal = document.getElementById('Alert_Modal_2');
+    const openBtn = document.getElementById('openModalBtn');
+    const closeBtn = document.getElementById('closeModalBtn');
+    const span_2 = document.getElementsByClassName('close')[0];
+
+    let modalStatus = 0;
+
+    function updateModalDisplay() {
+        if (modalStatus === 1) {
+            modal.style.display = 'block';
+        } else {
+            modal.style.display = 'none';
+        }
+    }
+
+    openBtn.onclick = function() {
+        modalStatus = 1;
+        updateModalDisplay();
+    }
+
+    closeBtn.onclick = function() {
+        modalStatus = 0;
+        updateModalDisplay();
+    }
+
+    span_2.onclick = function() {
+        modalStatus = 0;
+        updateModalDisplay();
+    }
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modalStatus = 0;
+            updateModalDisplay();
+        }
+    }
+});
+
+</script>
+
+{% endblock body %}
