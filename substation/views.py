@@ -21,10 +21,10 @@ from django.http import HttpResponse
 # from pyautocad import Autocad
 
 # dwg_file = "/home/purvesh/LDMS/substation/static/img/Diagrama unifilar00.dwg"
-dwg_file = "D:/code/CGM_SUBSTATION/LDMS/substation/static/img/Diagrama unifilar00.dwg"
+# dwg_file = "D:/code/CGM_SUBSTATION/LDMS/substation/static/img/Diagrama unifilar00.dwg"
 
 # txt_file_path = "/home/purvesh/LDMS/substation/SLD/"
-txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
+# txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
 database_name = 'ldms'
 
 database = "my_db"
