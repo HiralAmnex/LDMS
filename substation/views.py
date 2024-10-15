@@ -33,7 +33,6 @@ txt_file_path = "/home/"+pc_username+"/LDMS/substation/SLD/"
 # txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
 
 # database = "my_db"
-#purvesh
 database_name = 'ldms'
 
 
@@ -469,3 +468,4 @@ def Button_event(request):
 			return redirect('/Home/')
 
 	return render(request, 'Login.html')
+#dbjkshdjsdjfhsdjhfj
