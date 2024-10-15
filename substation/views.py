@@ -33,6 +33,7 @@ txt_file_path = "/home/"+pc_username+"/LDMS/substation/SLD/"
 # txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
 
 # database = "my_db"
+#purvesh
 database_name = 'ldms'
 
 
