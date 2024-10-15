@@ -14,20 +14,27 @@ import os
 
 # Create your views here.
 from django.http import HttpResponse
+import getpass
+
+# Get the current user name
+pc_username = getpass.getuser()
+
+print(f"The current user is: {pc_username}")
 # import ezdxf
 
 # import pythoncom
 # import os
 # from pyautocad import Autocad
 
-# dwg_file = "/home/purvesh/LDMS/substation/static/img/Diagrama unifilar00.dwg"
+dwg_file = "/home/"+pc_username+"/LDMS/substation/static/img/Diagrama unifilar00.dwg"
 # dwg_file = "D:/code/CGM_SUBSTATION/LDMS/substation/static/img/Diagrama unifilar00.dwg"
 
-# txt_file_path = "/home/purvesh/LDMS/substation/SLD/"
+txt_file_path = "/home/"+pc_username+"/LDMS/substation/SLD/"
 # txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
-database_name = 'ldms'
 
 # database = "my_db"
+database_name = 'ldms'
+
 
 ip_path = ''
 RTU_readings_Data = ''
