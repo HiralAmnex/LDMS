@@ -27,7 +27,7 @@ from django.http import HttpResponse
 # txt_file_path = 'D:/code/CGM_SUBSTATION/LDMS/substation/SLD/'
 database_name = 'ldms'
 
-database = "my_db"
+# database = "my_db"
 
 ip_path = ''
 RTU_readings_Data = ''
