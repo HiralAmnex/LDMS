@@ -184,10 +184,14 @@
           <a href="/Feeders">Feeders</a>
           <a href="/RTU_Status">Trends</a>
           <a href="/Reports">Reports</a>
-          <a href="/Repots_Metering">Metering Report</a>
-          <a href="/Reports_SoE">SoE Report</a>
+          <!-- <a href="/Repots_Metering">Metering Report</a> -->
+          <!-- <a href="/Reports_SoE">SoE Report</a> -->
           <a href="/Events">Events</a>
+          <!-- <h2>{{super_user}}</h2> -->
           <a href="/Settings">Settings</a>
+          <!-- {% if super_user == 1 %}
+          {% else %} -->
+          <!-- {% endif %} -->
           <!-- <a href="/Alarms">Alarms</a> -->
         </div>
         <div style="border:0px solid #111; width:99%; align-items: center; height: var(--stanard-nav-height); position: absolute; bottom: 0; left: 0; background-color: var(--bg-side-nav-color);">
@@ -199,7 +203,7 @@
       <!-- side nav bar -->
       <!-- nav bar -->
       <div style="" class="nav">
-        <div style="position: absolute; display: flex; align-items:center; height:100%; width: 100%; border:0px dashed;">
+        <div style="position: absolute; display: flex; align-items:center; height:100%; width: 100%; border:0px dashed; overflow: hidden;">
           <!-- <h3>{{Title}}</h3> -->
 
           <!-- <p style="" class="">Welcome, User {{Title}}</p> -->
@@ -207,27 +211,23 @@
             <h2 style="color: white;">{{Title}}</h2>
           </div>
           <div style="border:0px solid; position: absolute; right: 14%;">
-            <p style="" class="nav_p">Welcome, {{User}}</p>
+            <p style="" class="nav_p">Welcome, {{User_name}}</p>
           </div>
           <div class="Nav_icons">
-            <button style="" class="nav_font">Alerts</button>
+            <!-- <button style="" class="nav_font">Alerts</button> -->
             <a href="/" style="" class="nav_links">Logout</a>
+            <a href="/Alarms/" style="" class="nav_links">Alerts</a>
           </div>
         </div>
       </div>
+      
       <!-- nav bar -->
       <div id="main">
         <!-- ------------------- alert script ------------------- -->
         <!-- <div id="alert_box_1">This is an alert message 1!</div> -->
         <!-- <div id="alert_box_2">This is an alert message 2!</div> -->
         <!-- <div id="alert-container"></div> -->
-        <script>
-        $(document).ready(function() {
-        setInterval(function() {
-        $("#refresh").load(window.location.href + " #refresh");
-        }, 2000);
-        });
-        </script>
+        
         
         <!-- ------------------- alert script ------------------- -->
         <!-- <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; h</span> -->
@@ -237,27 +237,27 @@
       </div>
     </div>
     <script>
-    /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
-    var dropdown = document.getElementsByClassName("dropdown-btn");
-    var i;
-    for (i = 0; i < dropdown.length; i++) {
-    dropdown[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var dropdownContent = this.nextElementSibling;
-    if (dropdownContent.style.display === "block") {
-    dropdownContent.style.display = "none";
-    } else {
-    dropdownContent.style.display = "block";
-    }
-    });
-    }
+      /* Loop through all dropdown buttons to toggle between hiding and showing its dropdown content - This allows the user to have multiple dropdowns without any conflict */
+      var dropdown = document.getElementsByClassName("dropdown-btn");
+      var i;
+      for (i = 0; i < dropdown.length; i++) {
+      dropdown[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var dropdownContent = this.nextElementSibling;
+      if (dropdownContent.style.display === "block") {
+      dropdownContent.style.display = "none";
+      } else {
+      dropdownContent.style.display = "block";
+      }
+      });
+      }
     </script>
-    <div class="alert-container" id="alert-container"></div>
-      <script>
+        <div class="alert-container" id="alert-container"></div>
+    <script>
       function showSlidingAlerts(numAlerts) {
       const alertContainer = document.getElementById('alert-container');
       let alertCount = 0;
-      let msg = 'hellow';
+      let msg = '';
       const interval = setInterval(() => {
       if (alertCount < numAlerts) {
       const alert = document.createElement('div');
@@ -284,7 +284,13 @@
       }
       // Example: Show a variable number of alerts (e.g., 5 alerts)
       showSlidingAlerts(1);
-      </script>
+    </script>
+    <script>
+      // Disable right-click context menu
+      document.addEventListener('contextmenu', function(event) {
+          event.preventDefault();
+      });
+  </script>
     
   </body>
 </html>

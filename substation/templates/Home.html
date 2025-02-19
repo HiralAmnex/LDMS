@@ -57,18 +57,68 @@
             stroke-width: 0.5px;
             fill: none;
         }
-
+        .tooltip-svg{
+            position: absolute; display: none; background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 5px; pointer-events: none;
+            z-index: 2;
+        }
 
     </style>
+    <title>Home</title>
 </head>
+
+
+<!-- <pre id="sld-data">{{ SLD_1|safe }}</pre> -->
+<h2 id="sld-data" style="display: none;"></h2>
+
+
+<!-- <div>
+
+
+    <div style="border: 2px solid; height: 300px; overflow: auto;">
+        
+        <h2>SLD 2 Data</h2>
+        <pre id="sld2">{{ final_data2|safe }}</pre>
+    </div>
+    <div style="border: 2px solid; height: 300px; overflow: auto;">
+        <h2>SLD 1 Data</h2>
+        <pre id="sld1">{{ final_data|safe }}</pre>
+    </div>
+
+</div> -->
+
+
+    <!-- <script>
+        // Function to fetch updated data every second
+        setInterval(() => {
+            fetch('/fetch_data/')
+                .then(response => response.json())
+                .then(data => {
+                    var pythonData = {
+                    // SLD_data: JSON.stringify(data.final_data, null, 2);
+                    // SLD_middledata: JSON.stringify(data.final_data2, null, 2);
+                };
+                    // Update the DOM with the new data
+                    document.getElementById('sld1').textContent = JSON.stringify(data.final_data, null, 2);
+                    document.getElementById('sld2').textContent = JSON.stringify(data.final_data2, null, 2);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }, 1000); // Fetch every 1 second
+    </script>  -->
+
+
+
+
+
+
 	<!-- <div style="border:0px solid orange; ">
         <h2 class="" style="margin: 5px; background-color:var(--bg-head-nav-color); color:#eee">SUB STATION - APATAPA</h2>
     </div>
     <div style="border:0px solid orange; ">
     </div> -->
+
 <div id="sub_div">
-       
-    <svg id="mySvg" width="1600" height="1000" style="border: 0px dashed; margin-top:5px; margin-left: 5px;" ></svg>
+    <div id="tooltip" class="tooltip-svg"></div>
+    <svg id="mySvg" width="3400" height="1000" style="border: 0px dashed; margin-top:5px; margin-left: 5px;" ></svg>
 
     <!-- style="border: 2px dashed; margin-top:0%; margin-left: 2%;" -->
 
@@ -79,97 +129,44 @@
         // Embed Python data in a JavaScript object
         var pythonData = {
             SLD_data: {{SLD_1|safe}},
-            SLD_middledata: {{SLD_2|safe}}
         };
+        console.log("pythonData HTML ------",pythonData);
+
+
+        var pythonData2 = {
+            SLD_data2: {{demo_SLD2_data_variable|safe}}
+        };
+        
     </script>
+    
+    <!-- <script>
+        function fetchSldData() {
+        fetch('/fetch_data/') // Fetch data from the endpoint
+            .then(response => response.json())
+            .then(data => {
+                pythonData = JSON.stringify(data.final_data, null, 2); // Assign the value to the global variable
+                // console.log("Updated pythonData: HTML", pythonData); // Log the value when it is fetched
+                var pythonData = {
+                    SLD_data: {{SLD_1|safe}},
+                };
+            })
+            .catch(error => console.error('Error fetching SLD data:', error));
+        }
+        
+        // Fetch data every second
+        setInterval(fetchSldData, 1000);
+    </script> -->
 
 
 </div>
-
-<!-- <script>
-        let scale = 0.564474; // Initial scale value
-        let translateX = 1.17576; // Initial translateX value
-        let translateY = 21.8459; // Initial translateY value
-        let isDragging = false;
-        let startX, startY;
-
-        const svgElement = document.getElementById('mySvg');
-        const svgContainer = document.getElementById('sub_div');
-        const centerButton = document.getElementById('center-button');
-
-        // Apply initial transform
-        updateTransform();
-
-        svgContainer.addEventListener('wheel', function(event) {
-            event.preventDefault();
-            const zoomFactor = 1.1;
-            const rect = svgElement.getBoundingClientRect();
-            const offsetX = event.clientX - rect.left;
-            const offsetY = event.clientY - rect.top;
-            if (event.deltaY < 0) {
-                zoomIn(offsetX, offsetY, zoomFactor);
-            } else {
-                zoomOut(offsetX, offsetY, zoomFactor);
-            }
-        });
-
-        svgContainer.addEventListener('mousedown', function(event) {
-            isDragging = true;
-            startX = event.clientX - translateX;
-            startY = event.clientY - translateY;
-        });
-
-        svgContainer.addEventListener('mousemove', function(event) {
-            if (isDragging) {
-                translateX = event.clientX - startX;
-                translateY = event.clientY - startY;
-                updateTransform();
-            }
-        });
-
-        svgContainer.addEventListener('mouseup', function() {
-            isDragging = false;
-        });
-
-        svgContainer.addEventListener('mouseleave', function() {
-            isDragging = false;
-        });
-
-        centerButton.addEventListener('click', centerSvg);
-
-        function zoomIn(offsetX, offsetY, factor) {
-            scale *= factor;
-            translateX -= offsetX * (factor - 1);
-            translateY -= offsetY * (factor - 1);
-            updateTransform();
-        }
-
-        function zoomOut(offsetX, offsetY, factor) {
-            scale /= factor;
-            translateX += offsetX * (1 - 1 / factor);
-            translateY += offsetY * (1 - 1 / factor);
-            updateTransform();
-        }
-
-        function updateTransform() {
-            svgElement.style.transformOrigin = '0 0';
-            svgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-        }
-
-        function centerSvg() {
-            const containerRect = svgContainer.getBoundingClientRect();
-            const svgRect = svgElement.getBoundingClientRect();
-            translateX = (containerRect.width - svgRect.width * scale) / 2;
-            translateY = (containerRect.height - svgRect.height * scale) / 2;
-            updateTransform();
-        }
-    </script> -->
+<!-- 
 <script>
         let scale = 1;
         let translateX = 0;
         let translateY = 0;
         let isDragging = false;
         let startX, startY;
+        var pythonData;
 
         const svgElement = document.getElementById('mySvg');
         const svgContainer = document.getElementById('sub_div');
@@ -238,7 +235,7 @@
             translateY = (containerRect.height - svgRect.height) / 2;
             updateTransform();
         }
-    </script>
+    </script> -->
 
 
 

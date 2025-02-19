@@ -1,1 +1,97 @@
-[{'titlename': 'TRANSFORMER-1', 'attr1name': 'MVA', 'attr1val': '28.00', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '28.00', 'attr4name': 'Iy', 'attr4val': '28.00', 'attr5name': 'Ib', 'attr5val': '28.00', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'TRANSFORMER-1 33/11 KV 10MVA', 'status': 'on', 'statustransporter': 'off', 'attr7name': 'MVA', 'attr7val': '28.00', 'attr8name': 'VLL', 'attr8val': ' K', 'attr9name': 'I', 'attr9val': '28.00', 'attr10name': 'Iy', 'attr10val': '28.00', 'attr11name': 'Ib', 'attr11val': '28.00', 'attr12name': 'PF', 'attr12val': '-', 'attr13name': 'OLTC', 'attr13val': '1', 'attr14name': 'OTI', 'attr14val': '56', 'attr15name': 'WTI', 'attr15val': '0', 'attributeleft': '11kV IN0', 'transpoterdata': [{'titlename': '12', 'attr1name': 'MVA', 'attr1val': '2.48', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '2.48', 'attr4name': 'Iy', 'attr4val': '2.48', 'attr5name': 'Ib', 'attr5val': '2.48', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'Transformer', 'status': 'on', 'attributecenter': '11kV IN0'}, {'titlename': '12', 'attr1name': 'MVA', 'attr1val': '2.48', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '2.48', 'attr4name': 'Iy', 'attr4val': '2.48', 'attr5name': 'Ib', 'attr5val': '2.48', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'Transformer', 'status': 'on', 'attributecenter': '11kV IN0'}]}, {'titlename': 'TRANSFORMER-2', 'attr1name': 'MVA', 'attr1val': '28.00', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '28.00', 'attr4name': 'Iy', 'attr4val': '28.00', 'attr5name': 'Ib', 'attr5val': '28.00', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'TRANSFORMER-2 33/11 KV 10MVA', 'status': 'off', 'statustransporter': 'on', 'attr7name': 'MVA', 'attr7val': '28.00', 'attr8name': 'VLL', 'attr8val': ' K', 'attr9name': 'I', 'attr9val': '28.00', 'attr10name': 'Iy', 'attr10val': '28.00', 'attr11name': 'Ib', 'attr11val': '28.00', 'attr12name': 'PF', 'attr12val': '-', 'attr13name': 'OLTC', 'attr13val': '1', 'attr14name': 'OTI', 'attr14val': '28', 'attr15name': 'WTI', 'attr15val': '0', 'attributeleft': '11kV IN1', 'transpoterdata': [{'titlename': '1212', 'attr1name': 'MVA', 'attr1val': '2.48', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '2.48', 'attr4name': 'Iy', 'attr4val': '2.48', 'attr5name': 'Ib', 'attr5val': '2.48', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'Transformer', 'status': 'on', 'attributecenter': '11kV IN1'}, {'titlename': '12212111', 'attr1name': 'MVA', 'attr1val': '2.48', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '2.48', 'attr4name': 'Iy', 'attr4val': '2.48', 'attr5name': 'Ib', 'attr5val': '2.48', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'Transformer', 'status': 'on', 'attributecenter': '11kV IN1'}, {'titlename': '122', 'attr1name': 'MVA', 'attr1val': '2.48', 'attr2name': 'VLL', 'attr2val': ' K', 'attr3name': 'I', 'attr3val': '2.48', 'attr4name': 'Iy', 'attr4val': '2.48', 'attr5name': 'Ib', 'attr5val': '2.48', 'attr6name': 'PF', 'attr6val': '-', 'titlesidetext': 'Transformer', 'status': 'on', 'attributecenter': '11kV IN1'}]}]
+{
+    "incomingLineCount": 1,
+    "incLineStatus": [
+        "on"
+    ],
+    "incCBStatus": [
+        "on"
+    ],
+    "mainBusLineCouplerStatus": [
+        "",
+        "off"
+    ],
+    "transformerVoltageLineStatus": [
+        "on",
+        "on"
+    ],
+    "transformerCount": 2,
+    "transformerFeederCounts": [
+        4,
+        4
+    ],
+    "feederNames": [
+        [
+            {
+                "feederName": "STATIONTRANSFORMER"
+            },
+            {
+                "feederName": "COURTFEEDER"
+            },
+            {
+                "feederName": "Spare5"
+            },
+            {
+                "feederName": "RAILWAYSTATIONROAD"
+            }
+        ],
+        [
+            {
+                "feederName": "NEWKRANTINAGAR"
+            },
+            {
+                "feederName": "Spare4"
+            },
+            {
+                "feederName": "Spare1"
+            },
+            {
+                "feederName": "Spare3"
+            }
+        ]
+    ],
+    "solarCount": 0,
+    "solarPosition": [
+        "left"
+    ],
+    "solarNames": [
+        [
+            "Solar A"
+        ]
+    ],
+    "feederCBStatus": [
+        [
+            "off",
+            "error",
+            "on",
+            "off"
+        ],
+        [
+            "off",
+            "error",
+            "on",
+            "off"
+        ]
+    ],
+    "incomingLineAssignments": [
+        0,
+        0
+    ],
+    "trfTopCBStatus": [
+        "on",
+        "on"
+    ],
+    "trfBottomCBStatus": [
+        "on",
+        "off"
+    ],
+    "solarIncomingLineStatus": [
+        "off"
+    ],
+    "solarCBStatus": [
+        "error"
+    ],
+    "subBusLineCouplerStatus": [
+        "off",
+        ""
+    ]
+}

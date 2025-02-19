@@ -3,133 +3,496 @@
 
 <head>
     <style>
-        .table-container {
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            border: 0px solid;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        .filter-container .filter-item {
+            display: flex;
+            flex-direction: column;
+            width: 200px;
+            float: left;
+            margin-right: 10px;
         }
-        th, td {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
+
+        .filter-container label {
+            font-size: 14px;
+            margin-bottom: 5px;
         }
-        th {
-            background-color: #f4f4f4;
-        }
-        input {
-            margin-bottom: 10px;
+
+        .filter-container input,
+        .filter-container select {
             padding: 5px;
             width: 100%;
             box-sizing: border-box;
         }
-        .button-container {
-            margin: 10px 0;
+
+        .table-container {
+            width: 100%;
+            max-height: 500px;
+            overflow-x: auto;
+             overflow-y: auto;
+            border: 1px solid #ddd;
         }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+
+
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .report_dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .report_dropdown-button {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            cursor: pointer;
+            background-color: #f9f9f9;
+            border: 1px solid #657476;
+        }
+        .report_dropdown-content {
+            display: none;
+            position: absolute;
+            width: 190px;
+            height: 300px;
+            overflow-x: auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 1px;
+            z-index: 1;
+            border: 0px dashed;
+        }
+        .report_dropdown-content label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .report_dropdown-content input {
+            margin-right: 5px;
+        }
+        .report_dropdown-content.show {
+            display: block;
+        }
+
         .report-button {
             padding: 10px 20px;
-            background-color: #4CAF50;
+            background-color: #2169ac;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
+            margin: 18px;
         }
+
         .report-button:hover {
-            background-color: #45a049;
+            background-color: #15458b;
         }
-        
-        
+        #sub_div{
+            height: 600px;
+        }
+        .column-toggle{
+            float: left;
+            position: absolute;
+            margin: 0px 0px 0px -80px;
+        }
+        .column-toggle_P{
+            padding-left: 30px;
+        }
     </style>
 </head>
+
 <body>
     <div id="sub_div">
-        
-    <h1 class="pg_title">Reports Page</h1>
-    <input type="text" id="filterInput" placeholder="Filter rows...">
+        <h1 class="pg_title">Reports Page</h1>
+        <h3 id="report_data" style="display: none;"> {{fields_to_retrieve}}</h3>
 
-    <div class="button-container">
-        <button class="report-button" onclick="generateReport()">Generate Report</button>
-    </div>
 
-    <div class="table-container">
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Rows will be populated by JavaScript -->
-            </tbody>
-        </table>
-    </div>
-    </div>
+        <!-- Filters Section -->
+        <div class="filter-container">
+            <form action="/Button_event/" method="post" name="form_1">
+                
+            <div class="filter-item">
+                <label for="start-date">Start Date</label>
+                <input type="date" name="start_date" id="start-date" required>
+            </div>
+            <div class="filter-item">
+                <label for="end-date">End Date</label>
+                <input type="date" name="end_date" id="end-date" required>
+            </div>
 
+            <!-- <div class="filter-item">
+                <label for="feeder">Feeder</label>
+                <select id="feeder" name="feeder">
+                    <option value="" disabled selected>Select Feeder</option>
+                    <option name = "Feeder_1" value="33INCOMER1">33KV INCOMER</option>
+                    <option name = "Feeder_2" value="11INCOMER1">11KV INCOMER</option>
+                </select>
+            </div> -->
+
+            <div class="filter-item">
+                <label for="feeder">Feeder</label>
+                <select id="feeder" name="feeder">
+                    <option value="" disabled selected>Select Feeder</option>
+                    {% for feeder in feder_values %}
+                     <option value="{{feeder}}"> {{feeder}}</option>
+                    {% endfor %}
+                    <!-- <option name = "Feeder_2" value="11INCOMER1">11KV INCOMER</option> -->
+                </select>
+            </div>
+            
+            <div class="filter-item">
+                <label for="parameter-name">Parameter Name</label>
+               <!--  <div class="report_dropdown">
+                    <button>Select Columns</button>
+                    <div class="report_dropdown-content">
+                    </div>
+                </div> -->
+                <div class="report_dropdown">
+                    <div class="report_dropdown-button">Select Options</div>
+                    <div class="report_dropdown-content">
+                        <!-- <label><input type="checkbox" class="column-toggle" id="selectAll" onclick="toggleSelectAll()"><p class="column-toggle_P">Select All</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_i" checked><p class="column-toggle_P">Voltage-I </p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_v" checked><p class="column-toggle_P">Voltage-V</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_r" checked><p class="column-toggle_P">Voltage-R</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_i" checked><p class="column-toggle_P">Current-I</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_v" checked><p class="column-toggle_P">Current-V</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_r" checked><p class="column-toggle_P">Current-R</p></label> -->
+                        
+
+                        <label><input type="checkbox" class="column-toggle" id="selectAll" onclick="toggleSelectAll()"><p class="column-toggle_P">Select All</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_rphase" checked><p class="column-toggle_P">Voltage-R</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_yphase" checked><p class="column-toggle_P">Voltage-Y </p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_bphase" checked><p class="column-toggle_P">Voltage-B</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_rphase" checked><p class="column-toggle_P">Current-R</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_yphase" checked><p class="column-toggle_P">Current-Y</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="current_bphase" checked><p class="column-toggle_P">Current-B</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_ryphase" checked><p class="column-toggle_P">Voltage-RY</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_brphase" checked><p class="column-toggle_P">Voltage_BR</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="voltage_ybphase" checked><p class="column-toggle_P">Voltage_YB</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="frequency" checked><p class="column-toggle_P">Frequency</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="apparent_power" checked><p class="column-toggle_P">Apparent Power</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="active_import" checked><p class="column-toggle_P">Active Import</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="active_export" checked><p class="column-toggle_P">Active Export</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="reactive_import" checked><p class="column-toggle_P">Reactive Import</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="reactive_export" checked><p class="column-toggle_P">Reactive Export</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="powerfactor" checked><p class="column-toggle_P">Power Factor</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="active_power" checked><p class="column-toggle_P">Active power</p></label>
+                        <label><input type="checkbox" class="column-toggle" name="feeder_parameter" value="reactive_power" checked><p class="column-toggle_P">Reactive power</p></label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label for="time-format">Time Format</label>
+                <select id="time-format" name="time_format">
+                    <option  value="Default" selected>Default</option>
+                    <option value="03_min">03 Min</option>
+                    <option value="05_min">05 Min</option>
+                    <option value="10_min">10 Min</option>
+                    <option value="15_min">15 Min</option>
+                    <option value="30_min">30 Min</option>
+                    <option value="1_hour">01 Hour</option>
+                </select>
+            </div>
+            <!-- Generate Report Button -->
+            <button class="report-button" name="data_apply" value="data_apply" type="submit">Apply</button>
+            <button class="report-button" onclick="generateReport()" >Generate Report</button>
+            <!-- <button onclick="generatePDF()">Download PDF</button> -->
+
+            <!-- <button id="download-pdf-button" >Download PDF</button> -->
+            </form>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-container">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <!-- Headers will be dynamically added here -->                
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 <footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.24/jspdf.plugin.autotable.min.js"></script>
-    <script>
-        // Sample data generation
-        const data = [];
-        for (let i = 1; i <= 100; i++) {
-            data.push({ id: i, name: `Data ${i}`, value: Math.floor(Math.random() * 1000) });
-        }
+    <!-- <script>
+        // Demo data generation for 15 rows
+         // var data = JSON.parse('{{ report_data|safe }}');
+         // const data = JSON.parse('{{ report_data|safe }}');
+        //  const data =  [
+        //      {'received_datetime': 'xyz', 'feedername': '33INCOMER1', 'voltage_rphase': '0.0', 'voltage_yphase': '0.0', 'voltage_bphase': '0.0', 'current_rphase': '0.0', 'current_yphase': '0.0', 'current_bphase': '0.0', 'voltage_ryphase': '0.0', 'voltage_brphase': '0.0', 'voltage_ybphase': '0.0', 'frequency': '0.0', 'apparent_power': '0.0', 'active_import': '0.0', 'active_export': '0.0', 'reactive_import': '0.0', 'reactive_export': '0.0', 'powerfactor': '0.0', 'active_power': '0.0', 'reactive_power': '0.0'}, {'received_datetime': 'xyz', 'feedername': '33INCOMER1', 'voltage_rphase': '0.0', 'voltage_yphase': '0.0', 'voltage_bphase': '0.0', 'current_rphase': '0.0', 'current_yphase': '0.0', 'current_bphase': '0.0', 'voltage_ryphase': '0.0', 'voltage_brphase': '0.0', 'voltage_ybphase': '0.0', 'frequency': '0.0', 'apparent_power': '0.0', 'active_import': '0.0', 'active_export': '0.0', 'reactive_import': '0.0', 'reactive_export': '0.0', 'powerfactor': '0.0', 'active_power': '0.0', 'reactive_power': '0.0'}, {'received_datetime': 'xyz', 'feedername': '33INCOMER1', 'voltage_rphase': '0.0', 'voltage_yphase': '0.0', 'voltage_bphase': '0.0', 'current_rphase': '0.0', 'current_yphase': '0.0', 'current_bphase': '0.0', 'voltage_ryphase': '0.0', 'voltage_brphase': '0.0', 'voltage_ybphase': '0.0', 'frequency': '0.0', 'apparent_power': '0.0', 'active_import': '0.0', 'active_export': '0.0', 'reactive_import': '0.0', 'reactive_export': '0.0', 'powerfactor': '0.0', 'active_power': '0.0', 'reactive_power': '0.0'}
+        //                   ]
+        const data = JSON.parse('{{ data|safe }}');
+        const data = JSON.parse('{{ fields_to_retrieve|safe }}');
 
-        // Populate table with data
-        const tableBody = document.querySelector('#dataTable tbody');
+        
+ 
+         console.log("----------", data)
+ 
+         // Populate table with demo data
+         const tableBody = document.querySelector('#dataTable tbody');
+         data.forEach(item => {
+             const row = document.createElement('tr');
+             ['received_datetime','feedername','voltage_rphase','voltage_yphase','voltage_bphase','current_rphase','current_yphase','current_bphase','voltage_ryphase','voltage_brphase','voltage_ybphase','frequency','apparent_power','active_import','active_export','reactive_import','reactive_export','powerfactor','active_power','reactive_power']
+                 .forEach(key => row.innerHTML += `<td>${typeof item[key] === 'number' ? item[key] : item[key]}</td>`);
+             tableBody.appendChild(row);
+         });
+ 
+ 
+ 
+         // Select/Deselect All functionality
+         // Select/Deselect All functionality
+         function toggleSelectAll() {
+             const selectAllCheckbox = document.getElementById('selectAll');
+             const columnCheckboxes = document.querySelectorAll('.column-toggle');
+             
+             columnCheckboxes.forEach(checkbox => {
+                 if (checkbox !== selectAllCheckbox) {
+                     checkbox.checked = selectAllCheckbox.checked;
+                 }
+             });
+         }
+ 
+         // Report generation function
+         async function generateReport() {
+             const { jsPDF } = window.jspdf;
+             const doc = new jsPDF();
+ 
+             doc.text('Report', 10, 10);
+ 
+             const selectedColumns = [];
+             const columnCheckboxes = document.querySelectorAll('.column-toggle:checked');
+ 
+             columnCheckboxes.forEach(checkbox => {
+                 if (checkbox.id !== 'selectAll') { // Exclude "Select All" checkbox
+                     selectedColumns.push(checkbox.value);
+                 }
+             });
+ 
+             const tableHeaders = selectedColumns.map(col => col.replace('_', ' ').toUpperCase());
+             const tableData = data.map(item => {
+                 return selectedColumns.map(col => item[col]);
+             });
+ 
+             doc.autoTable({
+                 head: [tableHeaders],
+                 body: tableData,
+                 startY: 20,
+                 theme: 'grid'
+             });
+ 
+             doc.save('report.pdf');
+         }
+ 
+     </script> -->
+
+     <script>
+        // Assuming `fields_to_retrieve` and `data` are passed from Django context
+        const fieldsToRetrieve = JSON.parse('{{ fields_to_retrieve|safe }}'); // List of selected columns
+        const data = JSON.parse('{{ data|safe }}'); // Actual data
+    
+        console.log("Selected Fields: ", fieldsToRetrieve);
+        console.log("Data: ", data);
+    
+        // Get the table and its parts
+        
+        const tableHead = document.querySelector('#dataTable thead tr'); // Header row
+        const tableBody = document.querySelector('#dataTable tbody');   // Body of the table
+    
+        // Populate table headers dynamically
+        fieldsToRetrieve.forEach(column => {
+            const th = document.createElement('th');
+            th.textContent = column.replace('_', ' ').toUpperCase(); // Convert column names for display
+            tableHead.appendChild(th);
+        });
+    
+
+        // Populate table rows dynamically
         data.forEach(item => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.id}</td>
-                <td>${item.name}</td>
-                <td>${item.value}</td>
-            `;
+            fieldsToRetrieve.forEach(key => {
+                const cell = document.createElement('td');
+                cell.textContent = item[key] !== undefined ? item[key] : ''; // Handle missing keys
+                row.appendChild(cell);
+            });
             tableBody.appendChild(row);
         });
 
-        // Filter functionality
-        document.getElementById('filterInput').addEventListener('input', function() {
-            const filterValue = this.value.toLowerCase();
-            const rows = tableBody.querySelectorAll('tr');
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                let rowText = '';
-                cells.forEach(cell => {
-                    rowText += cell.textContent.toLowerCase();
-                });
-                if (rowText.includes(filterValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+
+        
+        // Select/Deselect All functionality
+         // Select/Deselect All functionality
+         function toggleSelectAll() {
+             const selectAllCheckbox = document.getElementById('selectAll');
+             const columnCheckboxes = document.querySelectorAll('.column-toggle');
+             
+             columnCheckboxes.forEach(checkbox => {
+                 if (checkbox !== selectAllCheckbox) {
+                     checkbox.checked = selectAllCheckbox.checked;
+                 }
+             });
+         }
+
+        async function generateReport() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'mm', 'a4');  // Landscape for better fit
+
+        doc.text('Report', 10, 10);
+
+        // Get selected columns + Ensure Feeder Name & Received Time are always included
+        const selectedColumns = ['feedername', 'received_datetime'];  // Ensure these two are included
+        document.querySelectorAll('.column-toggle:checked').forEach(checkbox => {
+            if (checkbox.id !== 'selectAll') {
+                selectedColumns.push(checkbox.value);
+            }
         });
 
-        // Report generation function
-        async function generateReport() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+        // Format headers for PDF
+        const tableHeaders = selectedColumns.map(col => col.replace('_', ' ').toUpperCase());
 
-            doc.text('Report', 10, 10);
+        // Extract table data correctly
+        const tableData = data.map(item => selectedColumns.map(col => item[col] || 'N/A'));
 
-            const columns = ["ID", "Name", "Value"];
-            const rows = data.map(item => [item.id, item.name, item.value]);
+        // Improve table formatting
+        doc.autoTable({
+            head: [tableHeaders],
+            body: tableData,
+            startY: 20,
+            theme: 'grid',
+            styles: { fontSize: 8 },
+            columnStyles: {
+                0: { cellWidth: 35 },  // Adjust Feeder Name
+                1: { cellWidth: 35 },  // Adjust Received Time
+                // Other columns get auto width
+            },
+            margin: { top: 15 }
+        });
 
-            doc.autoTable({
-                head: [columns],
-                body: rows,
-                startY: 20,
-                theme: 'grid'
+        doc.save('report.pdf');
+    }
+    </script>
+    <script>
+        const report_dropdown = document.querySelector('.report_dropdown');
+        const button = report_dropdown.querySelector('.report_dropdown-button');
+        const content = report_dropdown.querySelector('.report_dropdown-content');
+
+        // Toggle report_dropdown visibility
+        button.addEventListener('click', () => {
+            content.classList.toggle('show');
+        });
+
+        // Close report_dropdown when clicking outside
+        window.addEventListener('click', (event) => {
+            if (!report_dropdown.contains(event.target)) {
+                content.classList.remove('show');
+            }
+        });
+
+        // Log selected options
+        content.addEventListener('change', () => {
+            const selected = Array.from(content.querySelectorAll('input:checked'))
+                .map(input => input.value);
+            console.log('Selected options:', selected);
+        });
+    </script>
+
+    <script>
+        // Function to send form data to the backend
+        async function sendDataToBackend() {
+        // Collect form data
+        const formData = new FormData(document.querySelector('form[name="form_1"]'));
+        const data = {};
+
+        // Convert FormData to JSON object
+        formData.forEach((value, key) => {
+            if (!data[key]) {
+                data[key] = value;
+            } else {
+                // Handle multiple values for the same key (e.g., checkboxes)
+                if (!Array.isArray(data[key])) {
+                    data[key] = [data[key]];
+                }
+                data[key].push(value);
+            }
+        });
+
+        // Send data to backend using Fetch API
+        try {
+            const response = await fetch('/Button_event/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token if using Django
+                },
+                body: JSON.stringify(data)
             });
 
-            doc.save('report.pdf');
+            if (response.ok) {
+                const result = await response.json();
+                console.log('Backend Response:', result);
+            } else {
+                console.error('Error sending data to backend:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    </script>
-</footer>
+    }
 
+    // Add event listeners to form inputs
+    document.querySelectorAll('#start-date, #end-date, #feeder, #time-format').forEach(input => {
+        input.addEventListener('change', sendDataToBackend);
+    });
+
+    document.querySelectorAll('.column-toggle').forEach(checkbox => {
+        checkbox.addEventListener('change', sendDataToBackend);
+    });
+</script>
+
+<script>
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+
+        // Capture the table
+        html2canvas(document.querySelector("#dataTable")).then(canvas => {
+            let imgData = canvas.toDataURL("image/png");
+            let pdf = new jsPDF("p", "mm", "a4");
+            let imgWidth = 190; // Fit within A4
+            let imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            pdf.save("table.pdf");
+        });
+    }
+</script>
+</footer>
 {% endblock body %}

@@ -5,8 +5,22 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	
+
 	<title>Feeders</title>
 	<style>
+		body {
+            margin: 0;
+            padding: 20px;
+            /* height: 100vh; Ensures the body takes full height */
+            overflow-y: auto; /* Enables vertical scrolling */
+        }
+
+        #sub_div {
+            max-width: 100%;
+            height: 600px; /* Ensures the chart doesn't shrink */
+        }
 		
 		.card {
 			width: 300px;
@@ -14,8 +28,69 @@
 			background-color: white;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			border-radius: 10px;
-			margin-right: 20px; /* Added margin between cards */
+			margin-right: 20px;
 			float: left;
+		}
+		.progress-bar-container {
+			margin-bottom: 15px;
+		}
+		.progress-bar-labels {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+		.progress-bar {
+			width: 100%;
+			height: 10px;
+			background-color: #e0e0e0;
+			border-radius: 10px;
+			overflow: hidden;
+			position: relative;
+		}
+		/* Additional styles for dropdown */
+        .dropdown {
+            display: none; /* Hidden by default */
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            margin-top: 10px;
+        }
+		.progress-bar-inner {
+			height: 100%;
+			width: 0;
+			background-color: #4caf50;
+			transition: width 0.5s;
+			border-radius: 10px;
+		}
+		#progress1 {
+			background-color: #f44336; /* Green for Iry */
+		}
+		#progress2 {
+			background-color: #2196f3; /* Yellow for Iyb */
+		}
+		#progress3 {
+			background-color: #4caf50; /* Red for Ibr */
+		}
+		#progress4 {
+			background-color: #f44336; /* Blue for Ir */
+		}
+		#progress5 {
+			background-color: #2196f3; /* Orange for Iy */
+		}
+		#progress6 {
+			background-color: #4caf50; /* Purple for Ib */
+		}
+		.label-left {
+			float: left;
+			font-size: 14px;
+			line-height: 20px;
+		}
+		.label-right {
+			float: right;
+			font-size: 14px;
+			line-height: 20px;
 		}
 		.card_2 {
 			width: 220px;
@@ -41,140 +116,574 @@
 			background-color: #ff5c33;
 			color: #f2f2f2;
 		}
-		.progress-bar-container {
-			margin-bottom: 15px;
-			display: flex;
-			align-items: center;
-		}
-		.progress-bar {
-			width: 100%;
-			height: 20px;
-			background-color: #e0e0e0;
+		
+
+
+
+		/* ------------------------- */
+		/* Styling for the chart */
+        #graph-container {
+            flex: 2;
+        }
+
+        /* Styling for the statistics panel */
+        .statistics {
+            flex: 1;
+            margin-left: 20px;
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .statistics p {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+		.Tariff-option{
+			background: #ff5c33; 
+			padding: 2px;
+			text-align: center;
+            margin: 10px 0;
 			border-radius: 10px;
-			overflow: hidden;
-			position: relative;
+
 		}
-		.progress-bar-inner {
-			height: 100%;
-			width: 0;
-			background-color: #4caf50;
-			transition: width 0.5s;
-			border-radius: 10px;
-		}
-		.progress-label {
-			margin-left: 10px;
-			font-size: 14px;
-			line-height: 20px;
-		}
+		.chart-container {
+            width: 70%;  /* Increased the width of the chart */
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .chart-details {
+            width: 30%;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .chart-details p {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+		.dropdown .top-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .dropdown .top-container .half-width {
+            width: 45%;  /* Adjusted to avoid overflow with 2% gap */
+            padding: 10px;
+            border: 1px solid #aaa;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .dropdown .full-width {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #aaa;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+		
 	</style>
 
 
 <body>
 	<div id="sub_div">
 		
-	<h1 class="pg_title">Feeders</h1>
-	<div class="card">
-		<p>Line Voltage (KV)</p>
-		<hr>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress1"></div>
+		<h1 class="pg_title">Feeders</h1>
+		<!-- First card -->
+		<div class="card">
+			<p>Line Voltage (KV)</p>
+			<hr>
+			
+			<!-- Iry -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>ry</sub></span>
+					<span class="label-right" id="label1">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress1"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label1">0%</div>
-		</div>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress2"></div>
+
+			<!-- Iyb -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>yb</sub></span>
+					<span class="label-right" id="label2">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress2"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label2">0%</div>
-		</div>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress3"></div>
+
+			<!-- Ibr -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>br</sub></span>
+					<span class="label-right" id="label3">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress3"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label3">0%</div>
 		</div>
-	</div>
 
-	<!-- Second card -->
-	<div class="card">
-		<p>Line Current (A)</p>
-		<hr>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress4"></div>
+		<!-- Second card -->
+		<div class="card">
+			<p>Line Current (A)</p>
+			<hr>
+			
+			<!-- Iry -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>r</sub></span>
+					<span class="label-right" id="label4">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress4"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label4">0%</div>
-		</div>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress5"></div>
+
+			<!-- Iyb -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>y</sub></span>
+					<span class="label-right" id="label5">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress5"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label5">0%</div>
-		</div>
-		<div class="progress-bar-container">
-			<div class="progress-bar">
-				<div class="progress-bar-inner" id="progress6"></div>
+
+			<!-- Ibr -->
+			<div class="progress-bar-container">
+				<div class="progress-bar-labels">
+					<span class="label-left">I<sub>b</sub></span>
+					<span class="label-right" id="label6">0</span>
+				</div>
+				<div class="progress-bar">
+					<div class="progress-bar-inner" id="progress6"></div>
+				</div>
 			</div>
-			<div class="progress-label" id="label6">0%</div>
 		</div>
-	</div>
 
-	<div style="" class="card_2">
-		<h5>Power Factor</h5>
-		<h3>-0.97(Lag)</h3>
-	</div>
-
-	<div class="card_3">
-		<h5>Power Factor</h5>
-		<h3>-0.97(Lag)</h3>
-	</div>
-
-	<div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
-		<p style="float: left; padding-left: 5px;">Load Pattern for feeder : 11KV IN</p>
-		<a href="/" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
-	</div>
-
-	<div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
-		<p style="float: left; padding-left: 5px;">Line Current Pattern for Service : 11KV IN</p>
-		<a href="/" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
-	</div>
-
-	<div style="width: 100%; border:0px solid; float:left; margin-top: 25px">
-		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px; ">
-			<p style="float: left; padding-left: 5px;">Electricity Terrif</p>
-			<a href="/RTU_Status" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+		<div class="card_2">
+			<h5>Power Factor</h5>
+			<h3 id="power_factor_1">-0.97 (Lag)</h3>
 		</div>
-		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
-			<p style="float: left; padding-left: 5px;">Consuption (Last 3 Months)</p>
-			<a href="/Reports" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
+		
+		<div class="card_3">
+			<h5>Power Factor</h5>
+			<h3 id="power_factor_2">0.85 (Lead)</h3>
 		</div>
-		<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
-			<p style="float: left; padding-left: 5px;">Detail of Energy Comsuption</p>
-			<a href="/RTU_Status" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">Click Here</a>
-		</div>
-	</div>
 
+		<div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+            <p style="float: left; padding-left: 5px;">Load Pattern for feeder : 11KV IN</p>
+            <button class="toggle-dropdown" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">click here</button>
+            <div class="dropdown">
+				<div id="graph-container">
+					<canvas id="kwChart"></canvas>
+				</div>
+			
+				<div class="statistics">
+					<p id="averageKw">Average kW: </p>
+					<p id="minKw">Minimum kW: </p>
+					<p id="maxKw">Maximum kW: </p>
+				</div>
+			
+				<script>
+					// Sample dummy data for time and kW values
+					const timeLabels = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00'];
+					const kwData = [20, 35, 50, 45, 60, 55, 70, 65, 80, 75]; // kW values over time
+			
+					// Calculate average, min, and max kW
+					function calculateStatistics(data) {
+						const total = data.reduce((sum, value) => sum + value, 0);
+						const average = total / data.length;
+						const min = Math.min(...data);
+						const max = Math.max(...data);
+			
+						return { average, min, max };
+					}
+			
+					const stats = calculateStatistics(kwData);
+			
+					// Update the statistics display
+					document.getElementById('averageKw').textContent = 'Average kW: ' + stats.average.toFixed(2);
+					document.getElementById('minKw').textContent = 'Minimum kW: ' + stats.min;
+					document.getElementById('maxKw').textContent = 'Maximum kW: ' + stats.max;
+			
+					// Create the kW chart without the dots
+					const ctx = document.getElementById('kwChart').getContext('2d');
+					const kwChart = new Chart(ctx, {
+						type: 'line',
+						data: {
+							labels: timeLabels, // Time on the X-axis
+							datasets: [{
+								label: 'kW over Time',
+								data: kwData, // kW values on the Y-axis
+								borderColor: 'rgba(0, 123, 255, 1)', // Clear line color (blue)
+								backgroundColor: 'rgba(0, 123, 255, 0)', // No fill, making the line clear
+								borderWidth: 3, // Increase the line thickness for clarity
+								pointRadius: 0, // Remove dots from the line
+								tension: 0.3, // Smooth the line
+								fill: false, // Ensure no fill under the line
+							}]
+						},
+						options: {
+							responsive: true,
+							scales: {
+								x: {
+									title: {
+										display: true,
+										text: 'Time (Hours)',
+										font: {
+											size: 16
+										}
+									}
+								},
+								y: {
+									title: {
+										display: true,
+										text: 'kW',
+										font: {
+											size: 16
+										}
+									},
+									min: 0
+								}
+							},
+							plugins: {
+								legend: {
+									display: true,
+									labels: {
+										font: {
+											size: 14
+										}
+									}
+								}
+							}
+						}
+					});
+				</script>
+			</div>
+        </div>
 
-	<script>
-		function updateProgressBar(id, labelId, value) {
-			var progressBar = document.getElementById(id);
-			var label = document.getElementById(labelId);
-			progressBar.style.width = value + '%';
-			label.innerHTML = value + '%';
-		}
+        <div style="border: 0px solid #aaa; width: 98%; float: left; margin-top: 25px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+            <p style="float: left; padding-left: 5px;">Line Current Pattern for Service : 11KV IN</p>
+            <button class="toggle-dropdown" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">click here</button>
+            <div class="dropdown">
+				<div id="graph-container">
+					<canvas id="currentChart"></canvas>
+				</div>
+			
+				<div class="statistics">
+					<p id="averageIR">Average IR: </p>
+					<p id="minIR">Minimum IR: </p>
+					<p id="maxIR">Maximum IR: </p>
+			
+					<p id="averageIY">Average IY: </p>
+					<p id="minIY">Minimum IY: </p>
+					<p id="maxIY">Maximum IY: </p>
+			
+					<p id="averageIB">Average IB: </p>
+					<p id="minIB">Minimum IB: </p>
+					<p id="maxIB">Maximum IB: </p>
+				</div>
+			
+				<script>
+					// Sample dummy data for time and currents (IR, IY, IB) values
+					const timeLabels_2 = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00'];
+					const irData = [15, 20, 18, 22, 19, 25, 30, 28, 35, 32]; // IR values
+					const iyData = [18, 22, 20, 25, 23, 28, 35, 30, 40, 38]; // IY values
+					const ibData = [12, 17, 15, 19, 16, 22, 27, 25, 30, 28]; // IB values
+			
+					// Function to calculate statistics (average, min, max)
+					function calculateStatistics(data) {
+						const total = data.reduce((sum, value) => sum + value, 0);
+						const average = total / data.length;
+						const min = Math.min(...data);
+						const max = Math.max(...data);
+			
+						return { average, min, max };
+					}
+			
+					// Calculate statistics for IR, IY, and IB
+					const statsIR = calculateStatistics(irData);
+					const statsIY = calculateStatistics(iyData);
+					const statsIB = calculateStatistics(ibData);
+			
+					// Update the statistics display
+					document.getElementById('averageIR').textContent = 'Average IR: ' + statsIR.average.toFixed(2);
+					document.getElementById('minIR').textContent = 'Minimum IR: ' + statsIR.min;
+					document.getElementById('maxIR').textContent = 'Maximum IR: ' + statsIR.max;
+			
+					document.getElementById('averageIY').textContent = 'Average IY: ' + statsIY.average.toFixed(2);
+					document.getElementById('minIY').textContent = 'Minimum IY: ' + statsIY.min;
+					document.getElementById('maxIY').textContent = 'Maximum IY: ' + statsIY.max;
+			
+					document.getElementById('averageIB').textContent = 'Average IB: ' + statsIB.average.toFixed(2);
+					document.getElementById('minIB').textContent = 'Minimum IB: ' + statsIB.min;
+					document.getElementById('maxIB').textContent = 'Maximum IB: ' + statsIB.max;
+			
+					// Create the chart with IR, IY, and IB datasets
+					const ctx_2 = document.getElementById('currentChart').getContext('2d');
+					const currentChart = new Chart(ctx_2, {
+						type: 'line',
+						data: {
+							labels: timeLabels_2, // Time on the X-axis
+							datasets: [
+								{
+									label: 'IR',
+									data: irData, // IR values on the Y-axis
+									borderColor: 'rgba(255, 99, 132, 1)', // Line color for IR (red)
+									backgroundColor: 'rgba(255, 99, 132, 0)', // No fill for IR
+									borderWidth: 3,
+									pointRadius: 0, // Remove dots
+									tension: 0.3, // Smooth line
+									fill: false
+								},
+								{
+									label: 'IY',
+									data: iyData, // IY values on the Y-axis
+									borderColor: 'rgba(54, 162, 235, 1)', // Line color for IY (blue)
+									backgroundColor: 'rgba(54, 162, 235, 0)', // No fill for IY
+									borderWidth: 3,
+									pointRadius: 0, // Remove dots
+									tension: 0.3, // Smooth line
+									fill: false
+								},
+								{
+									label: 'IB',
+									data: ibData, // IB values on the Y-axis
+									borderColor: 'rgba(75, 192, 192, 1)', // Line color for IB (green)
+									backgroundColor: 'rgba(75, 192, 192, 0)', // No fill for IB
+									borderWidth: 3,
+									pointRadius: 0, // Remove dots
+									tension: 0.3, // Smooth line
+									fill: false
+								}
+							]
+						},
+						options: {
+							responsive: true,
+							scales: {
+								x: {
+									title: {
+										display: true,
+										text: 'Time (Hours)',
+										font: {
+											size: 16
+										}
+									}
+								},
+								y: {
+									title: {
+										display: true,
+										text: 'Current (A)',
+										font: {
+											size: 16
+										}
+									},
+									min: 0
+								}
+							},
+							plugins: {
+								legend: {
+									display: true,
+									labels: {
+										font: {
+											size: 14
+										}
+									}
+								}
+							}
+						}
+					});
+				</script>
+			</div>
+        </div>
 
-		document.addEventListener("DOMContentLoaded", function() {
-			// Simulate progress for demo purposes
-			var progressValues = [25, 60, 85];
-			for (let i = 0; i < progressValues.length; i++) {
-				setTimeout(() => {
-					updateProgressBar('progress' + (i + 1), 'label' + (i + 1), progressValues[i]);
-					updateProgressBar('progress' + (i + 4), 'label' + (i + 4), progressValues[i]); // Update for second card
-				}, 500);
+        <div style="width: 100%; border:0px solid; float:left; margin-top: 25px">
+            <div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+                <p style="float: left; padding-left: 5px;">Electricity Tariff: Rs 7 per unit</p>
+                <button class="toggle-dropdown" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">click here</button>
+                <div class="dropdown">
+					<br>
+					<div style="border: 0px solid;">
+						<div class="Tariff-option"><h1>124598 &#8377;</h1></div>
+						<div class="Tariff-option"><h1>98657432 &#8377;</h1></div>
+
+					</div>
+				</div>
+				
+            </div>
+            <div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+                <p style="float: left; padding-left: 5px;">Consumption (Last 3 Months)</p>
+                <button class="toggle-dropdown" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">click here</button>
+                <div class="dropdown">
+					<div class="chart-container">
+						<canvas id="myPieChart"></canvas>
+					</div>
+				
+					<div class="chart-details">
+						<!-- <p>Total Usage for Last 3 Months</p> -->
+						<!-- <p>Month 1: <span id="month1">700 units</span></p>
+						<p>Month 2: <span id="month2">1200 units</span></p>
+						<p>Month 3: <span id="month3">1500 units</span></p> -->
+					</div>
+				
+					<script>
+						// Data for electricity usage in 3 months
+						const usageData = [700, 1200, 1500];
+						const totalUsage = usageData.reduce((acc, value) => acc + value, 0);
+				
+						// Update the month details
+						// document.getElementById('month1').innerText = usageData[0] + " units";
+						// document.getElementById('month2').innerText = usageData[1] + " units";
+						// document.getElementById('month3').innerText = usageData[2] + " units";
+				
+						// Create the pie chart
+						const ctx_3 = document.getElementById('myPieChart').getContext('2d');
+						const myPieChart = new Chart(ctx_3, {
+							type: 'pie',
+							data: {
+								labels: ['Sept', 'Oct', 'Dec'],
+								datasets: [{
+									data: usageData,
+									backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+									hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+								}]
+							},
+							options: {
+								responsive: true,
+								layout: {
+									padding: {
+										top: 10,    // Adding some padding at the top
+										bottom: 10  // Adding space at the bottom
+									}
+								},
+								plugins: {
+									legend: {
+										display: true,
+										position: 'bottom',
+										align: 'end',  // Align legend to the right
+										labels: {
+											boxWidth: 10,  // Smaller legend box
+										}
+									},
+									tooltip: {
+										callbacks: {
+											label: function(tooltipItem) {
+												const dataset = tooltipItem.dataset;
+												const currentValue = dataset.data[tooltipItem.dataIndex];
+												const percentage = Math.floor(((currentValue / totalUsage) * 100) + 0.5);
+												return currentValue + ' units (' + percentage + '%)';
+											}
+										}
+									}
+								}
+							}
+						});
+					</script>
+				</div>
+            </div>
+			<div style="border: 0px solid #aaa; background-color: #fff; width:30%; float: left; margin-left:4%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 20px;">
+				<p style="float: left; padding-left: 5px;">Detail of Energy Consumption</p>
+				<button class="toggle-dropdown" style="float:right; margin:5px; padding:10px; border-radius: 20px; background-color: green; color: #fff; border: 2px solid; font-size: 13px; text-decoration: none;">click here</button>
+				
+				<div class="dropdown">
+					<div class="half-width" name="div1" style="width: 42%; float: left; border: 1px solid #aaa; background-color: #ff5c33; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px; text-align: center;">
+						<h4>TODAY's Kwh</h4>
+						<p>65987</p>
+					</div>
+					<div class="half-width" name="div2" style="width: 42%; margin-left: 10px; float: left; border: 1px solid #aaa; background-color: #9ed32c; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px; text-align: center;">
+						<h4>TOTAL MONTH kwh</h4>
+						<p>23654789</p>	
+					</div>
+					<div class="full-width" name="div3" style="width: 93%; margin-top: 10px; margin-bottom: 10px; float: left; border: 1px solid #aaa; background-color: #1aa8c4; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px; text-align: center;">
+						<h4>INSTANTANEOUS Kwh</h4>
+						<p>5698743215649</p>
+					</div>
+				</div>
+			</div>
+			
+        </div>
+
+		<script>
+			function updateProgressBar(id, labelId, value) {
+				var progressBar = document.getElementById(id);
+				var label = document.getElementById(labelId);
+				progressBar.style.width = value + '%';
+				label.innerHTML = value;
 			}
-		});
-	</script>
+		
+			function updatePowerFactor(id, value) {
+				var powerFactorElement = document.getElementById(id);
+				powerFactorElement.innerHTML = value.toFixed(2) + (value < 0 ? " (Lag)" : " (Lead)");
+			}
+		
+			document.addEventListener("DOMContentLoaded", function() {
+				// Fixed lists of 10 data points for each progress bar
+				var data1 = [10, 20, 30, 40, 50, 100, 70, 80, 90, 60];
+				var data2 = [15, 25, 35, 45, 55, 65, 75, 85, 95, 5];
+				var data3 = [20, 30, 40, 50, 60, 70, 80, 90, 100, 10];
+				var data4 = [25, 35, 45, 55, 65, 75, 85, 95, 5, 15]; // Second card
+				var data5 = [30, 40, 50, 60, 70, 80, 90, 100, 10, 20]; // Second card
+				var data6 = [35, 45, 55, 65, 75, 85, 95, 5, 15, 25]; // Second card
+		
+				// Separate Power Factor data lists for both cards
+				var powerFactorData1 = [-0.98, -0.95, -0.92, -0.85, -0.80, -0.70, -0.60, -0.50, 0.40, 0.30]; // For card_2
+				var powerFactorData2 = [-0.85, -0.88, -0.90, -0.92, -0.95, -0.60, 0.55, 0.65, 0.75, 0.80]; // For card_3
+		
+				var index = 0; // Current index in the list
+		
+				function updateAllProgressBarsAndPowerFactor() {
+					// Update each progress bar with values from the fixed lists
+					updateProgressBar('progress1', 'label1', data1[index]);
+					updateProgressBar('progress2', 'label2', data2[index]);
+					updateProgressBar('progress3', 'label3', data3[index]);
+					updateProgressBar('progress4', 'label4', data4[index]);
+					updateProgressBar('progress5', 'label5', data5[index]);
+					updateProgressBar('progress6', 'label6', data6[index]);
+		
+					// Update Power Factor values from separate lists
+					updatePowerFactor('power_factor_1', powerFactorData1[index]);
+					updatePowerFactor('power_factor_2', powerFactorData2[index]);
+		
+					// Move to the next index, looping back to the start if needed
+					index = (index + 1) % data1.length;
+				}
+		
+				// Initial update on page load
+				updateAllProgressBarsAndPowerFactor();
+		
+				// Refresh progress bars and power factor every 2 seconds
+				setInterval(updateAllProgressBarsAndPowerFactor, 2000);
+
+				// Dropdown functionality
+                const dropdownButtons = document.querySelectorAll('.toggle-dropdown');
+                dropdownButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        const dropdown = this.nextElementSibling;
+                        dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
+                    });
+                });
+			});
+		</script>
+		
+		
+		
 	</div>
 
 </body>

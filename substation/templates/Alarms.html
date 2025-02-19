@@ -1,159 +1,101 @@
 {% extends 'Base.html' %}
+
 {% block body %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .ack-btn {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+            border-radius: 5px;
+        }
+        .ack-btn:hover {
+            background-color: darkgreen;
+            transform: scale(1.05);
+        }
+        .ack-btn:active {
+            background-color: limegreen;
+            transform: scale(0.95);
+        }
+    </style>
+    
+    <script>
+        function selectAllCheckboxes(source) {
+            let checkboxes = document.getElementsByName('selected_events');
+            checkboxes.forEach(checkbox => checkbox.checked = source.checked);
+        }
 
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script> -->
-<style>
-	body {
-    font-family: Arial, sans-serif;
-	}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background-color: white;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-
-</style>
+        function validateForm() {
+            let checkboxes = document.querySelectorAll('input[name="selected_events"]:checked');
+            if (checkboxes.length === 0) {
+                alert("Please select at least one event to acknowledge.");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
 <body>
+    <div id="sub_div">
+        <h1 class="pg_title">Events</h1>
 
-<h1 class="pg_title">Alarms</h1>
-
-    <h2>Modal Example</h2>
-    <button id="openModalBtn">Generate Alert</button>
-    <button id="closeModalBtn" style="display: none;">Close Alert</button>
-
-    <!-- <div id="Alert_Modal_1" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Alert Header</h2>
-            <p>This is a simple Alert.</p>
-        </div>
-    </div> -->
-
-    <div id="Alert_Modal_2" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Alert Header</h2>
-            <p>This is a simple Alert. 2</p>
-        </div>
+        <!-- ✅ Form for submitting selected checkboxes -->
+        <form method="post" action="/Button_event/" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Datetime</th>
+                        <th>Substation</th>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>
+                            <input type="checkbox" onclick="selectAllCheckboxes(this)"> Acknowledge
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>  
+                        <td>{{ event.received_datetime }}</td>
+                        <td>{{ event.feedername }}</td>
+                        <td>{{ event.parameter }}</td>
+                        <td>{{ event.parameter_value }}</td>
+                        <td>
+                            <input type="checkbox" name="selected_events" value="{{ event.pk }}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+            <button type="submit" class="ack-btn">Acknowledge Selected</button>
+        </form>
     </div>
-
 </body>
-
-<!-- <script type="text/javascript">
-	
-	document.addEventListener('DOMContentLoaded', (event) => {
-    const modal = document.getElementById('Alert_Modal_1');
-    const openBtn = document.getElementById('openModalBtn');
-    const closeBtn = document.getElementById('closeModalBtn');
-    const span_1 = document.getElementsByClassName('close')[0];
-
-    let modalStatus = 0;
-
-    function updateModalDisplay() {
-        if (modalStatus === 1) {
-            modal.style.display = 'block';
-        } else {
-            modal.style.display = 'none';
-        }
-    }
-
-    openBtn.onclick = function() {
-        modalStatus = 1;
-        updateModalDisplay();
-    }
-
-    closeBtn.onclick = function() {
-        modalStatus = 0;
-        updateModalDisplay();
-    }
-
-    span_1.onclick = function() {
-        modalStatus = 0;
-        updateModalDisplay();
-    }
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modalStatus = 0;
-            updateModalDisplay();
-        }
-    }
-});
-
-</script> -->
-
-<script type="text/javascript">
-	
-	document.addEventListener('DOMContentLoaded', (event) => {
-    const modal = document.getElementById('Alert_Modal_2');
-    const openBtn = document.getElementById('openModalBtn');
-    const closeBtn = document.getElementById('closeModalBtn');
-    const span_2 = document.getElementsByClassName('close')[0];
-
-    let modalStatus = 0;
-
-    function updateModalDisplay() {
-        if (modalStatus === 1) {
-            modal.style.display = 'block';
-        } else {
-            modal.style.display = 'none';
-        }
-    }
-
-    openBtn.onclick = function() {
-        modalStatus = 1;
-        updateModalDisplay();
-    }
-
-    closeBtn.onclick = function() {
-        modalStatus = 0;
-        updateModalDisplay();
-    }
-
-    span_2.onclick = function() {
-        modalStatus = 0;
-        updateModalDisplay();
-    }
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modalStatus = 0;
-            updateModalDisplay();
-        }
-    }
-});
-
-</script>
-
 {% endblock body %}

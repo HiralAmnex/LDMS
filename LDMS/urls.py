@@ -24,7 +24,7 @@ urlpatterns = [
     path('Events/', views.Events),
     path('Alarms/', views.Alarms),
     path('Graphs/', views.Graphs),
-    path('Reports/', views.Reports),
+    path('Reports/', views.Reports,name='Reports'),
     path('Repots_Metering/', views.Repots_Metering),
     path('Reports_SoE/', views.Reports_SoE),
     path('Feeders/', views.Feeders),
@@ -32,4 +32,6 @@ urlpatterns = [
     path('Button_event/', views.Button_event),
     path('Settings/', views.Settings),
     path('Authentication/', views.Authentication),
+
+    path('fetch_data/', views.fetch_data, name='fetch_data'),
 ]

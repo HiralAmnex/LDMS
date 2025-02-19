@@ -1,45 +1,60 @@
 {% extends 'Base.html' %}
 {% block body %}
 
-<style>
-    .form-section {
-        margin-bottom: 20px;
-    }
+<head>
+    <style>
+        .form-section {
+            margin-bottom: 20px;
+        }
 
-    /* Make the form scrollable */
-    #scrollableForm {
-        max-height: 400px; /* Set the maximum height for the scrollable area */
-        overflow-y: auto;  /* Enable vertical scrolling */
-        border: 1px solid #ccc; /* Optional: Add a border for visual separation */
-        padding: 10px; /* Optional: Add some padding inside the scrollable area */
-        margin-bottom: 20px; /* Optional: Add some margin below the scrollable area */
-        border-radius: 5px;
-    }
-</style>
+        #scrollableForm {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+    </style>
+    <title>Settings</title>
+</head>
 
 <div id="sub_div">
     <h1>Electrical Setup Form</h1>
-    <!-- Scrollable Form Section -->
+
     <div id="scrollableForm">
         <form id="dynamicForm" action="/Button_event/" method="post">
             {% csrf_token %}
-            
+
             <!-- Number of Incoming Lines -->
             <div class="form-section">
-                <label for="incomingLines">Number of Incoming Lines:</label>
+                <label for="incomingLines"><strong>Number of Incoming Lines :</strong></label>
                 <input type="number" id="incomingLines" name="incomingLines" min="0" required>
-                <button type="button" onclick="generateFields('incomingLines', 'incomingLinesSection', 'Incoming Line')">Add Incoming Lines</button>
+                <button type="button" onclick="generateIncomingLineFields()">Add Incoming Lines</button>
             </div>
             <div id="incomingLinesSection"></div>
 
             <!-- Number of Transformers -->
             <div class="form-section">
-                <label for="transformers">Number of Transformers:</label>
+                <label for="transformers"><strong>Number of Transformers :</strong></label>
                 <input type="number" id="transformers" name="transformers" min="0" required>
                 <button type="button" onclick="generateTransformerFields()">Add Transformers</button>
             </div>
             <div id="transformersSection"></div>
 
+            <!-- Bus Coupler Selection -->
+            <div id="busCouplerSection"></div>
+
+            <!-- Solar Selection -->
+            <div class="form-section">
+                <label for="solarConnections"><strong> Number of Solar Connections : </strong></label>
+                <select id="solarConnections" name="solarConnections" onchange="handleSolarSelection()">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div id="solarFollowUp"></div>
 
             <!-- Submit Button -->
             <div>
@@ -50,93 +65,229 @@
 </div>
 
 <script>
-    function generateFields(countId, sectionId, labelBase) {
-        const count = document.getElementById(countId).value;
-        const section = document.getElementById(sectionId);
+function generateIncomingLineFields() {
+    const count = document.getElementById("incomingLines").value;
+    const section = document.getElementById("incomingLinesSection");
+    section.innerHTML = '';
 
-        // Clear any existing fields
-        section.innerHTML = '';
+    for (let i = 1; i <= count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("form-section");
 
-        // Generate new fields based on the number provided
-        for (let i = 1; i <= count; i++) {
-            const label = document.createElement('label');
-            label.innerText = `${labelBase} ${i} Title: `;
+        const nameLabel = document.createElement("label");
+        nameLabel.innerText = `Incoming Line ${i} Name: `;
+       
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = `incoming_${i}_name`;
+        nameInput.required = true;
+       
+        const label = document.createElement("label");
+        label.innerText = ` CB Type: `;
 
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `${labelBase.toLowerCase().replace(' ', '_')}_title_${i}`;
+        const select = createCBTypeSelect(`incoming_${i}_cb_type`);
 
-            const br = document.createElement('br');
+        div.appendChild(nameLabel);
+        div.appendChild(nameInput);
+        div.appendChild(label);
+        div.appendChild(select);
+        section.appendChild(div);
+    }
+}
 
-            section.appendChild(label);
-            section.appendChild(input);
-            section.appendChild(br);
+function generateTransformerFields() {
+    const count = document.getElementById("transformers").value;
+    const section = document.getElementById("transformersSection");
+    section.innerHTML = '';
+
+    for (let i = 1; i <= count; i++) {
+        const div = document.createElement("div");
+        div.classList.add("form-section");
+
+        // Transformer CB Type
+        const label = document.createElement("label");
+        label.innerText = `Transformer ${i} CB Type: `;
+        const select = createCBTypeSelect(`transformer_${i}_cb_type`);
+
+        // Transformer Outgoing Feeders
+        const feederLabel = document.createElement("label");
+        feederLabel.innerText = `Transformer ${i} Outgoing Feeders: `;
+       
+        const feederInput = document.createElement("input");
+        feederInput.type = "number";
+        feederInput.min = "0";
+        feederInput.id = `transformer_${i}_outgoingCount`;
+        feederInput.name = `transformer_${i}_outgoingFeeders`;
+
+        const feederButton = document.createElement("button");
+        feederButton.type = "button";
+        feederButton.innerText = "Add Feeders";
+        feederButton.onclick = function() {
+            generateOutgoingFeederFields(i);
+        };
+
+        // Section to hold outgoing feeders
+        const feedersSection = document.createElement("div");
+        feedersSection.id = `transformer_${i}_outgoingFeedersSection`;
+
+        // Append elements
+        div.appendChild(label);
+        div.appendChild(select);
+        div.appendChild(document.createElement("br"));
+        div.appendChild(feederLabel);
+        div.appendChild(feederInput);
+        div.appendChild(feederButton);
+        div.appendChild(feedersSection);
+        section.appendChild(div);
+
+        // If it's not the last transformer, ask if there's a CB between this and the next transformer
+        if (i < count) {
+            const cbDiv = document.createElement("div");
+            cbDiv.classList.add("form-section");
+
+            const cbLabel = document.createElement("label");
+            cbLabel.innerText = `Is there a CB between Transformer ${i} and Transformer ${i + 1}?`;
+
+            // Yes radio button
+            const yesInput = document.createElement("input");
+            yesInput.type = "radio";
+            yesInput.name = `cb_between_${i}_${i + 1}`;
+            yesInput.value = "yes";
+            yesInput.required = true;
+
+            const yesLabel = document.createElement("label");
+            yesLabel.innerText = "Yes";
+            yesLabel.style.marginRight = "10px";
+
+            // No radio button
+            const noInput = document.createElement("input");
+            noInput.type = "radio";
+            noInput.name = `cb_between_${i}_${i + 1}`;
+            noInput.value = "no";
+            noInput.required = true;
+
+            const noLabel = document.createElement("label");
+            noLabel.innerText = "No";
+
+            cbDiv.appendChild(cbLabel);
+            cbDiv.appendChild(yesInput);
+            cbDiv.appendChild(yesLabel);
+            cbDiv.appendChild(noInput);
+            cbDiv.appendChild(noLabel);
+            section.appendChild(cbDiv);
         }
     }
 
-    function generateTransformerFields() {
-        const transformersCount = document.getElementById('transformers').value;
-        const section = document.getElementById('transformersSection');
+    generateBusCouplerSelection();
+}
 
-        // Clear any existing fields
-        section.innerHTML = '';
 
-        // Generate new fields for each transformer
-        for (let i = 1; i <= transformersCount; i++) {
-            const div = document.createElement('div');
-            div.classList.add('form-section');
+function generateOutgoingFeederFields(transformerIndex) {
+    const count = document.getElementById(`transformer_${transformerIndex}_outgoingCount`).value;
+    const section = document.getElementById(`transformer_${transformerIndex}_outgoingFeedersSection`);
+    section.innerHTML = '';
 
-            const label = document.createElement('label');
-            label.innerText = `Transformer ${i} Outgoing Feeders: `;
+    for (let j = 1; j <= count; j++) {
+        const feederDiv = document.createElement("div");
+        feederDiv.classList.add("form-section");
 
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.name = `transformer_${i}_outgoingFeeders`;
-            input.min = '0';
-            input.required = true;
+        // Feeder Name
+        const label = document.createElement("label");
+        label.innerText = `Feeder ${j} Name: `;
 
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.innerText = 'Add Outgoing Feeders';
-            button.onclick = function() {
-                generateOutgoingFeederFields(i, input.value);
-            };
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = `transformer_${transformerIndex}_feeder_${j}`;
+        input.required = true;
 
-            div.appendChild(label);
-            div.appendChild(input);
-            div.appendChild(button);
-            div.appendChild(document.createElement('br'));
+        // Feeder CB Type
+        const cbLabel = document.createElement("label");
+        cbLabel.innerText = ` CB Type: `;
 
-            const feedersSection = document.createElement('div');
-            feedersSection.id = `transformer_${i}_outgoingFeedersSection`;
+        const cbSelect = createCBTypeSelect(`transformer_${transformerIndex}_feeder_${j}_cb_type`);
 
-            div.appendChild(feedersSection);
-            section.appendChild(div);
-        }
+        // Append elements
+        feederDiv.appendChild(label);
+        feederDiv.appendChild(input);
+        feederDiv.appendChild(cbLabel);
+        feederDiv.appendChild(cbSelect);
+
+        section.appendChild(feederDiv);
     }
+}
 
-    function generateOutgoingFeederFields(transformerId, count) {
-        const section = document.getElementById(`transformer_${transformerId}_outgoingFeedersSection`);
+function handleSolarSelection() {
+    const solarCount = document.getElementById('solarConnections').value;
+    const solarFollowUp = document.getElementById('solarFollowUp');
 
-        // Clear any existing fields
-        section.innerHTML = '';
+    // Clear any existing follow-up questions
+    solarFollowUp.innerHTML = '';
 
-        // Generate new fields based on the number provided
-        for (let i = 1; i <= count; i++) {
-            const label = document.createElement('label');
-            label.innerText = `Transformer ${transformerId} - Outgoing Feeder ${i} Title: `;
+    // Add follow-up question if 1 solar connection is selected
+    if (solarCount === '1') {
+        const label = document.createElement('label');
+        label.innerText = 'Is the solar connection on the left or right? ';
 
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = `transformer_${transformerId}_outgoingFeeder_${i}_title`;
+        const leftRadio = document.createElement('input');
+        leftRadio.type = 'radio';
+        leftRadio.name = 'solarPosition';
+        leftRadio.value = 'Left';
 
-            const br = document.createElement('br');
+        const rightRadio = document.createElement('input');
+        rightRadio.type = 'radio';
+        rightRadio.name = 'solarPosition';
+        rightRadio.value = 'Right';
 
-            section.appendChild(label);
-            section.appendChild(input);
-            section.appendChild(br);
-        }
+        const leftLabel = document.createElement('span');
+        leftLabel.innerText = 'Left';
+
+        const rightLabel = document.createElement('span');
+        rightLabel.innerText = 'Right';
+
+        solarFollowUp.appendChild(label);
+        solarFollowUp.appendChild(leftRadio);
+        solarFollowUp.appendChild(leftLabel);
+        solarFollowUp.appendChild(rightRadio);
+        solarFollowUp.appendChild(rightLabel);
     }
+}
+
+
+// Function to create a CB type dropdown
+function createCBTypeSelect(name) {
+    const select = document.createElement("select");
+    select.name = name;
+    select.required = true;
+
+    ["Air", "Vacuum", "SF6"].forEach(type => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.innerText = type;
+        select.appendChild(option);
+    });
+
+    return select;
+}
+
+// Form submission handling
+document.getElementById("dynamicForm").addEventListener("submit", function (event) {
+    const cbGroups = document.querySelectorAll('[name^="cb_between_"]');
+   
+    let cbValues = {};
+
+    cbGroups.forEach(group => {
+        const selectedValue = document.querySelector(`input[name="${group.name}"]:checked`);
+        if (selectedValue) {
+            cbValues[group.name] = selectedValue.value;
+        } else {
+            cbValues[group.name] = "Not Selected";
+        }
+    });
+
+    console.log("Selected CB Values:", cbValues);
+});
+
+
 </script>
 
 {% endblock body %}

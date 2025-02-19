@@ -1,115 +1,79 @@
+
 {% extends 'Base.html' %}
+
 {% block body %}
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sample Table</title>
-        <style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Table</title>
+    <style>
         body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+            font-family: Arial, sans-serif;
+            margin: 20px;
         }
         table {
-        width: 100%;
-        border-collapse: collapse;
+            width: 100%;
+            border-collapse: collapse;
         }
         th, td {
-        padding: 8px 12px;
-        border: 1px solid #ddd;
-        text-align: left;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
         th {
-        background-color: #f4f4f4;
+            background-color: #f4f4f4;
         }
-        </style>
-    </head>
-    <body>
-        <div id="sub_div">
-            
-            <h1 class="pg_title">Events</h1>
+        .ack-btn {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+            border-radius: 5px;
+        }
+        .ack-btn:hover {
+            background-color: darkgreen;
+            transform: scale(1.05);
+        }
+        .ack-btn:active {
+            background-color: limegreen;
+            transform: scale(0.95);
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="sub_div">
+        <h1 class="pg_title">Events</h1>
+
+        <!-- ✅ Form for submitting selected checkboxes -->
+
             <table>
                 <thead>
                     <tr>
+                        <th>Sr. No.</th>
                         <th>Datetime</th>
-                        <th>Voltage Level</th>
-                        <th>Device</th>
-                        <th>Description</th>
-                        <th>Priority</th>
+                        <th>Substation</th>
+                        <th>Parameter</th>
+                        <th>Value</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for event in event_data %}
                     <tr>
-                        <td>2024-07-01 12:34:56</td>
-                        <td>230.45</td>
-                        <td>Device_1</td>
-                        <td>Description for Device_1</td>
-                        <td>High</td>
+                        <td>{{ forloop.counter }}</td>  
+                        <td>{{ event.received_datetime }}</td>
+                        <td>{{ event.feedername }}</td>
+                        <td>{{ event.parameter }}</td>
+                        <td>{{ event.parameter_value }}</td>
                     </tr>
-                    <tr>
-                        <td>2024-07-01 12:35:56</td>
-                        <td>232.12</td>
-                        <td>Device_2</td>
-                        <td>Description for Device_2</td>
-                        <td>Medium</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:36:56</td>
-                        <td>228.98</td>
-                        <td>Device_3</td>
-                        <td>Description for Device_3</td>
-                        <td>Low</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:37:56</td>
-                        <td>229.76</td>
-                        <td>Device_4</td>
-                        <td>Description for Device_4</td>
-                        <td>High</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:38:56</td>
-                        <td>230.89</td>
-                        <td>Device_5</td>
-                        <td>Description for Device_5</td>
-                        <td>Medium</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:39:56</td>
-                        <td>231.67</td>
-                        <td>Device_6</td>
-                        <td>Description for Device_6</td>
-                        <td>Low</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:40:56</td>
-                        <td>233.45</td>
-                        <td>Device_7</td>
-                        <td>Description for Device_7</td>
-                        <td>High</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:41:56</td>
-                        <td>230.12</td>
-                        <td>Device_8</td>
-                        <td>Description for Device_8</td>
-                        <td>Medium</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:42:56</td>
-                        <td>229.34</td>
-                        <td>Device_9</td>
-                        <td>Description for Device_9</td>
-                        <td>Low</td>
-                    </tr>
-                    <tr>
-                        <td>2024-07-01 12:43:56</td>
-                        <td>230.56</td>
-                        <td>Device_10</td>
-                        <td>Description for Device_10</td>
-                        <td>High</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-        </div>
-    </body>
+
+    </div>
+</body>
 {% endblock body %}
+

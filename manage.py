@@ -6,6 +6,13 @@ import sys
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'LDMS.settings')
+
+    if len(sys.argv) == 1:
+        sys.argv.append("runserver")
+        sys.argv.append("127.0.0.1:8000")  # Default host and port
+        sys.argv.append("--noreload")  # Disable autoreload to avoid issues with PyInstaller
+
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

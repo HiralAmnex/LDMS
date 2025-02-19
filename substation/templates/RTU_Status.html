@@ -4,141 +4,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Graphs</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Add any necessary styles */
+        body {
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto; /* Enables vertical scrolling */
+        }
+
+        #sub_div {
+            max-width: 100%;
+            height: 600px; /* Ensures the chart doesn't shrink */
+        }
+
+        canvas {
+            max-width: 100%;
+            height: 500px; /* Set a fixed height for the canvas */
+        }
+
+        p {
+            margin: 20px 0;
+        }
+
+        /* Styles for the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Scrollable table body */
+        #data-table {
+            max-height: 200px; /* Set a fixed height for the table body */
+            overflow-y: auto; /* Enables vertical scrolling */
+            display: block; /* Make it a block element to control height */
+        }
+
+        tbody {
+            display: block; /* Allow tbody to scroll separately */
+            width: 100%; /* Full width to match the table */
+        }
+
+        tr {
+            display: table; /* Set each row to behave like a table row */
+            table-layout: fixed; /* Fixed layout to ensure equal column width */
+            width: 100%; /* Full width to match the table */
+        }
     </style>
 </head>
 <body>
     <div id="sub_div">
 
-        <div style="width: 100%; height: 100px; padding: 10px; border: 1px solid;">
-            <h1>Graphical Trends</h1>
+        <h2>Real-Time Voltage, Current </h2>
+        <canvas id="myChart"></canvas>
 
-            <!-- Parameter Dropdown -->
-            <label for="parameter">Select Parameter:</label>
-            <select id="parameter">
-                <option value="all">All Parameters</option>
-                <option value="current">Current</option>
-                <option value="voltage">Voltage</option>
-                <option value="temperature">Temperature</option>
-            </select>
-
-            <!-- Chart Canvas -->
+        <!-- Real-Time Data Table -->
+        <div id="data-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time (hh:mm:ss)</th>
+                        <th>Voltage (V)</th>
+                        <th>Current (A)</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    <!-- Rows will be dynamically added here -->
+                </tbody>
+            </table>
         </div>
-        <canvas id="myChart" style="border:1px solid #ccc; width: 100%; max-width: 100%; height: 500px; float: left;"></canvas>
+        
+        <!-- Add some content below to check scrolling -->
 
-        <div>
-            <p>s</p>
-            <p>s</p>
-            <p>s</p>
-            
-        </div>
-    </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Generate data up to the current time of day with 1-minute intervals
-        const generateLabelsAndData = () => {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-
-            const totalMinutes = hours * 60 + minutes;
-
-            // Create labels from 00:00 to the current time
-            const labels = Array.from({ length: totalMinutes + 1 }, (_, i) => {
-                const h = Math.floor(i / 60).toString().padStart(2, '0');
-                const m = (i % 60).toString().padStart(2, '0');
-                return `${h}:${m}`;
-            });
-
-            // Simulate data for each parameter
+        <script>
+            const ctx = document.getElementById('myChart').getContext('2d');
+        
             const data = {
-                current: Array.from({ length: totalMinutes + 1 }, () => Math.floor(Math.random() * 1000)),
-                voltage: Array.from({ length: totalMinutes + 1 }, () => Math.floor(Math.random() * 240)),
-                temperature: Array.from({ length: totalMinutes + 1 }, () => Math.floor(Math.random() * 35))
-            };
-
-            return { labels, data };
-        };
-
-        const { labels, data } = generateLabelsAndData();
-
-        // Initialize the chart with the generated data
-        const ctx = document.getElementById('myChart').getContext('2d');
-        let myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
+                labels: [], // X-axis labels (Time)
                 datasets: [
                     {
-                        label: 'Current',
-                        data: data.current,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        label: 'Voltage (V)',
+                        data: [], // Y-axis data for Voltage
                         borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0,
+                        pointRadius: 0,
                     },
                     {
-                        label: 'Voltage',
-                        data: data.voltage,
-                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Temperature',
-                        data: data.temperature,
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1
+                        label: 'Current (A)',
+                        data: [], // Y-axis data for Current
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0,
+                        pointRadius: 0,
                     }
                 ]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            };
+        
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time (hh:mm:ss)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Value'
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false
                 }
+            };
+        
+            const myChart = new Chart(ctx, config);
+        
+            // Manual Voltage and Current values
+            const voltageValues = [12, 15, 18, 20, 22, 25, 30, 35, 40, 45, 50];
+            const currentValues = [5, 8, 10, 12, 15, 18, 20, 22, 25, 28, 30];
+            let index = 0; // Start index to cycle through values
+        
+            // Function to get the current time in hh:mm:ss format
+            function getCurrentTime() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                return `${hours}:${minutes}:${seconds}`;
             }
-        });
-
-        // Function to update chart data based on the selected parameter
-        function updateChart(parameter) {
-            if (parameter === 'all') {
-                myChart.data.datasets[0].data = data.current;
-                myChart.data.datasets[1].data = data.voltage;
-                myChart.data.datasets[2].data = data.temperature;
-
-                myChart.data.datasets[0].hidden = false;
-                myChart.data.datasets[1].hidden = false;
-                myChart.data.datasets[2].hidden = false;
-            } else {
-                myChart.data.datasets[0].hidden = parameter !== 'current';
-                myChart.data.datasets[1].hidden = parameter !== 'voltage';
-                myChart.data.datasets[2].hidden = parameter !== 'temperature';
-
-                if (parameter === 'current') {
-                    myChart.data.datasets[0].data = data.current;
-                } else if (parameter === 'voltage') {
-                    myChart.data.datasets[1].data = data.voltage;
-                } else if (parameter === 'temperature') {
-                    myChart.data.datasets[2].data = data.temperature;
-                }
-            }
-
-            myChart.update();
-        }
-
-        // Event listener for parameter selection
-        document.getElementById('parameter').addEventListener('change', function () {
-            const selectedParameter = this.value;
-            updateChart(selectedParameter);
-        });
-    });
-    </script>
-
-</body>
-
+        
+            setInterval(() => {
+                const currentTime = getCurrentTime(); // Get current time in hh:mm:ss format
+        
+                // Get the next values from the arrays
+                const newVoltage = voltageValues[index % voltageValues.length];
+                const newCurrent = currentValues[index % currentValues.length];
+        
+                // Increment the index to move to the next data point
+                index++;
+        
+                // Add new data to the chart
+                myChart.data.labels.push(currentTime); // Add time to labels
+                myChart.data.datasets[0].data.push(newVoltage); // Add new Voltage value
+                myChart.data.datasets[1].data.push(newCurrent); // Add new Current value
+        
+                // Update the chart to reflect changes
+                myChart.update();
+        
+                // Add new data to the table
+                const tableBody = document.getElementById('data-table-body');
+        
+                // Create a new row for the latest data
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `<td>${currentTime}</td><td>${newVoltage.toFixed(2)}</td><td>${newCurrent.toFixed(2)}</td>`;
+        
+                // Append the new row to the table body
+                tableBody.appendChild(newRow);
+            }, 1000); // Update every second
+        </script>
+        
+        
+    </div>
 {% endblock body %}

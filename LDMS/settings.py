@@ -76,11 +76,27 @@ WSGI_APPLICATION = 'LDMS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ldms',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',  # Set to the host where your PostgreSQL server is running
+        'PORT': '5432',      # Set to the port where your PostgreSQL server is running
+        'OPTIONS': {
+            'options': '-c search_path=ldms',
+        },
+        
     }
+
 }
 
 
@@ -128,3 +144,6 @@ os.path.join(BASE_DIR, 'static')
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GDAL_LIBRARY_PATH = r'C:\Program Files\GDAL\gdal300.dll'
+GEOS_LIBRARY_PATH = r'C:\Program Files\GDAL\geos_c.dll'
